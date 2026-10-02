@@ -1,0 +1,988 @@
+fileFormatVersion: 2
+guid: 5f364a688c031ec44ab095e4a9796091
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3331181497851464956
+    second: 10-street-fixtures_0
+  - first:
+      213: -7920307323832365566
+    second: 10-street-fixtures_1
+  - first:
+      213: 3251560817401180117
+    second: 10-street-fixtures_2
+  - first:
+      213: -4135039579462205462
+    second: 10-street-fixtures_3
+  - first:
+      213: 371835578078754778
+    second: 10-street-fixtures_4
+  - first:
+      213: 5250155397323751492
+    second: 10-street-fixtures_5
+  - first:
+      213: -8598006962632430649
+    second: 10-street-fixtures_6
+  - first:
+      213: -7243443290969862542
+    second: 10-street-fixtures_7
+  - first:
+      213: 3685889826188662742
+    second: 10-street-fixtures_8
+  - first:
+      213: -1892857634656674342
+    second: 10-street-fixtures_9
+  - first:
+      213: 6919621735245099370
+    second: 10-street-fixtures_10
+  - first:
+      213: -3917278002797467036
+    second: 10-street-fixtures_11
+  - first:
+      213: 6097975257390559809
+    second: 10-street-fixtures_12
+  - first:
+      213: 2178191229756879066
+    second: 10-street-fixtures_13
+  - first:
+      213: -3269617368238967711
+    second: 10-street-fixtures_14
+  - first:
+      213: -7646008750704251999
+    second: 10-street-fixtures_15
+  - first:
+      213: 5963596067551429702
+    second: 10-street-fixtures_16
+  - first:
+      213: 2783363917950889286
+    second: 10-street-fixtures_17
+  - first:
+      213: -431637812633960829
+    second: 10-street-fixtures_18
+  - first:
+      213: 8621420380206248164
+    second: 10-street-fixtures_19
+  - first:
+      213: 4627301652067977646
+    second: 10-street-fixtures_20
+  - first:
+      213: -2561957038163951286
+    second: 10-street-fixtures_21
+  - first:
+      213: -8117428045103310371
+    second: 10-street-fixtures_22
+  - first:
+      213: -5650844539966063752
+    second: 10-street-fixtures_23
+  - first:
+      213: 1192928963018108420
+    second: 10-street-fixtures_24
+  - first:
+      213: -4349337322813732699
+    second: 10-street-fixtures_25
+  - first:
+      213: 4708745161298091145
+    second: 10-street-fixtures_26
+  - first:
+      213: 7384244266439136636
+    second: 10-street-fixtures_27
+  - first:
+      213: 1627112230622971365
+    second: 10-street-fixtures_28
+  - first:
+      213: -1190328375072096946
+    second: 10-street-fixtures_29
+  - first:
+      213: 3909364011683295357
+    second: 10-street-fixtures_30
+  - first:
+      213: 5143187452464875918
+    second: 10-street-fixtures_31
+  - first:
+      213: -7456447740338798575
+    second: 10-street-fixtures_32
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: 10-street-fixtures_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 321
+        width: 339
+        height: 673
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfc4ac54cebba3e20800000000000000
+      internalID: 3331181497851464956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_1
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 305
+        width: 473
+        height: 675
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20e0c0bd37a651290800000000000000
+      internalID: -7920307323832365566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_2
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 789
+        width: 55
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5dfa6cef55ddf1d20800000000000000
+      internalID: 3251560817401180117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_3
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 851
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aef79fd29636d96c0800000000000000
+      internalID: -4135039579462205462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_4
+      rect:
+        serializedVersion: 2
+        x: 822
+        y: 837
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad77c3afc76092500800000000000000
+      internalID: 371835578078754778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_5
+      rect:
+        serializedVersion: 2
+        x: 980
+        y: 767
+        width: 47
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4400511748c4cd840800000000000000
+      internalID: 5250155397323751492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_6
+      rect:
+        serializedVersion: 2
+        x: 1068
+        y: 819
+        width: 137
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cb65ffb83ebda880800000000000000
+      internalID: -8598006962632430649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_7
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 859
+        width: 7
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27e0e0b44be1a7b90800000000000000
+      internalID: -7243443290969862542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_8
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 819
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d7933ba449e62330800000000000000
+      internalID: 3685889826188662742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_9
+      rect:
+        serializedVersion: 2
+        x: 1204
+        y: 869
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: add17e392083bb5e0800000000000000
+      internalID: -1892857634656674342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_10
+      rect:
+        serializedVersion: 2
+        x: 1212
+        y: 859
+        width: 25
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a613b557e4f670060800000000000000
+      internalID: 6919621735245099370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_11
+      rect:
+        serializedVersion: 2
+        x: 1216
+        y: 839
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46a2ecc396803a9c0800000000000000
+      internalID: -3917278002797467036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_12
+      rect:
+        serializedVersion: 2
+        x: 1224
+        y: 793
+        width: 70
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 142b2e9203c50a450800000000000000
+      internalID: 6097975257390559809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_13
+      rect:
+        serializedVersion: 2
+        x: 1232
+        y: 847
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad0b786026d7a3e10800000000000000
+      internalID: 2178191229756879066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_14
+      rect:
+        serializedVersion: 2
+        x: 1274
+        y: 863
+        width: 37
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1643ba6a35cff92d0800000000000000
+      internalID: -3269617368238967711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_15
+      rect:
+        serializedVersion: 2
+        x: 1282
+        y: 863
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1abaeb03d8be3e590800000000000000
+      internalID: -7646008750704251999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_16
+      rect:
+        serializedVersion: 2
+        x: 1302
+        y: 833
+        width: 103
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 644c156e603f2c250800000000000000
+      internalID: 5963596067551429702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_17
+      rect:
+        serializedVersion: 2
+        x: 1304
+        y: 879
+        width: 11
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64d2a1a8cbe70a620800000000000000
+      internalID: 2783363917950889286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_18
+      rect:
+        serializedVersion: 2
+        x: 1374
+        y: 863
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 38e735242b3820af0800000000000000
+      internalID: -431637812633960829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_19
+      rect:
+        serializedVersion: 2
+        x: 1392
+        y: 837
+        width: 89
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e0b185582075a770800000000000000
+      internalID: 8621420380206248164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_20
+      rect:
+        serializedVersion: 2
+        x: 988
+        y: 797
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea90718065a773040800000000000000
+      internalID: 4627301652067977646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_21
+      rect:
+        serializedVersion: 2
+        x: 1014
+        y: 803
+        width: 21
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a410d6ac5a9127cd0800000000000000
+      internalID: -2561957038163951286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_22
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 771
+        width: 43
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd9d2d1733a195f80800000000000000
+      internalID: -8117428045103310371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_23
+      rect:
+        serializedVersion: 2
+        x: 1026
+        y: 371
+        width: 479
+        height: 423
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87bfd5294da2491b0800000000000000
+      internalID: -5650844539966063752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_24
+      rect:
+        serializedVersion: 2
+        x: 686
+        y: 687
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40e28fa42922e8010800000000000000
+      internalID: 1192928963018108420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_25
+      rect:
+        serializedVersion: 2
+        x: 792
+        y: 365
+        width: 219
+        height: 375
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a8c659afbc04a3c0800000000000000
+      internalID: -4349337322813732699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_26
+      rect:
+        serializedVersion: 2
+        x: 918
+        y: 369
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98c1305b6c2d85140800000000000000
+      internalID: 4708745161298091145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_27
+      rect:
+        serializedVersion: 2
+        x: 1311
+        y: 0
+        width: 222
+        height: 388
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c75d1d3790b1a7660800000000000000
+      internalID: 7384244266439136636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_28
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 55
+        width: 501
+        height: 257
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e5c9f3f3f9a49610800000000000000
+      internalID: 1627112230622971365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_29
+      rect:
+        serializedVersion: 2
+        x: 575
+        y: 69
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4d72c546aa1b7fe0800000000000000
+      internalID: -1190328375072096946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_30
+      rect:
+        serializedVersion: 2
+        x: 622
+        y: 63
+        width: 127
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d70341e1bd9d04630800000000000000
+      internalID: 3909364011683295357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_31
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 27
+        width: 469
+        height: 313
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e894a6dfcb5406740800000000000000
+      internalID: 5143187452464875918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 10-street-fixtures_32
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 35
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11087de3940658890800000000000000
+      internalID: -7456447740338798575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      10-street-fixtures_0: 3331181497851464956
+      10-street-fixtures_1: -7920307323832365566
+      10-street-fixtures_10: 6919621735245099370
+      10-street-fixtures_11: -3917278002797467036
+      10-street-fixtures_12: 6097975257390559809
+      10-street-fixtures_13: 2178191229756879066
+      10-street-fixtures_14: -3269617368238967711
+      10-street-fixtures_15: -7646008750704251999
+      10-street-fixtures_16: 5963596067551429702
+      10-street-fixtures_17: 2783363917950889286
+      10-street-fixtures_18: -431637812633960829
+      10-street-fixtures_19: 8621420380206248164
+      10-street-fixtures_2: 3251560817401180117
+      10-street-fixtures_20: 4627301652067977646
+      10-street-fixtures_21: -2561957038163951286
+      10-street-fixtures_22: -8117428045103310371
+      10-street-fixtures_23: -5650844539966063752
+      10-street-fixtures_24: 1192928963018108420
+      10-street-fixtures_25: -4349337322813732699
+      10-street-fixtures_26: 4708745161298091145
+      10-street-fixtures_27: 7384244266439136636
+      10-street-fixtures_28: 1627112230622971365
+      10-street-fixtures_29: -1190328375072096946
+      10-street-fixtures_3: -4135039579462205462
+      10-street-fixtures_30: 3909364011683295357
+      10-street-fixtures_31: 5143187452464875918
+      10-street-fixtures_32: -7456447740338798575
+      10-street-fixtures_4: 371835578078754778
+      10-street-fixtures_5: 5250155397323751492
+      10-street-fixtures_6: -8598006962632430649
+      10-street-fixtures_7: -7243443290969862542
+      10-street-fixtures_8: 3685889826188662742
+      10-street-fixtures_9: -1892857634656674342
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

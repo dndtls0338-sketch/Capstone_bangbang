@@ -1,0 +1,1692 @@
+{
+  "version": 1,
+  "coordinateOrigin": "top-left",
+  "pixelsPerUnit": 100,
+  "referenceViewport": [
+    1534,
+    1025
+  ],
+  "playerHeightPx": 90,
+  "entries": [
+    {
+      "id": "convenience",
+      "label": "편의점",
+      "sheet": "sprites/01-store-cafe.png",
+      "searchRegion": [
+        0,
+        0,
+        825,
+        1024
+      ],
+      "targetAxis": "w",
+      "targetPixels": 505,
+      "spriteRect": [
+        58,
+        234,
+        736,
+        647
+      ],
+      "uniformScale": 0.68614,
+      "displaySize": [
+        505,
+        443.9
+      ],
+      "sheetSize": [
+        1535,
+        1024
+      ]
+    },
+    {
+      "id": "cafe",
+      "label": "카페",
+      "sheet": "sprites/01-store-cafe.png",
+      "searchRegion": [
+        825,
+        0,
+        711,
+        1024
+      ],
+      "targetAxis": "w",
+      "targetPixels": 488,
+      "spriteRect": [
+        873,
+        181,
+        623,
+        691
+      ],
+      "uniformScale": 0.78330658105939,
+      "displaySize": [
+        488,
+        541.3
+      ],
+      "sheetSize": [
+        1535,
+        1024
+      ]
+    },
+    {
+      "id": "hospital",
+      "label": "병원",
+      "sheet": "sprites/02-hospital.png",
+      "searchRegion": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "targetAxis": "w",
+      "targetPixels": 850,
+      "spriteRect": [
+        199,
+        92,
+        1155,
+        824
+      ],
+      "uniformScale": 0.73593,
+      "displaySize": [
+        850,
+        606.4
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "police",
+      "label": "경찰서",
+      "sheet": "sprites/03-police-ordinary.png",
+      "searchRegion": [
+        0,
+        0,
+        820,
+        1024
+      ],
+      "targetAxis": "w",
+      "targetPixels": 475,
+      "spriteRect": [
+        93,
+        202,
+        670,
+        676
+      ],
+      "uniformScale": 0.7089552238805971,
+      "displaySize": [
+        475,
+        479.3
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "ordinary",
+      "label": "일반 건물",
+      "sheet": "sprites/03-police-ordinary.png",
+      "searchRegion": [
+        820,
+        0,
+        716,
+        1024
+      ],
+      "targetAxis": "w",
+      "targetPixels": 360,
+      "spriteRect": [
+        887,
+        199,
+        554,
+        672
+      ],
+      "uniformScale": 0.64982,
+      "displaySize": [
+        360,
+        436.7
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "campus-main",
+      "label": "대학교 본관",
+      "sheet": "sprites/04-campus-main-lecture.png",
+      "searchRegion": [
+        0,
+        0,
+        980,
+        1024
+      ],
+      "targetAxis": "w",
+      "targetPixels": 805,
+      "spriteRect": [
+        34,
+        163,
+        893,
+        681
+      ],
+      "uniformScale": 0.90146,
+      "displaySize": [
+        805,
+        613.9
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "lecture",
+      "label": "강의동",
+      "sheet": "sprites/04-campus-main-lecture.png",
+      "searchRegion": [
+        980,
+        0,
+        556,
+        1024
+      ],
+      "targetAxis": "w",
+      "targetPixels": 455,
+      "spriteRect": [
+        1031,
+        261,
+        475,
+        552
+      ],
+      "uniformScale": 0.95789,
+      "displaySize": [
+        455,
+        528.8
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "student-union",
+      "label": "학생회관",
+      "sheet": "sprites/05-student-union.png",
+      "searchRegion": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "targetAxis": "w",
+      "targetPixels": 735,
+      "spriteRect": [
+        254,
+        58,
+        1029,
+        878
+      ],
+      "uniformScale": 0.71429,
+      "displaySize": [
+        735,
+        627.1
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "laundry",
+      "label": "세탁소",
+      "sheet": "sprites/06-small-shops.png",
+      "searchRegion": [
+        0,
+        0,
+        512,
+        500
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        88,
+        46,
+        364,
+        405
+      ],
+      "uniformScale": 0.96154,
+      "displaySize": [
+        350,
+        389.4
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "restaurant",
+      "label": "식당",
+      "sheet": "sprites/06-small-shops.png",
+      "searchRegion": [
+        512,
+        0,
+        512,
+        500
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        580,
+        46,
+        360,
+        406
+      ],
+      "uniformScale": 0.97222,
+      "displaySize": [
+        350,
+        394.7
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "stationery",
+      "label": "문구점",
+      "sheet": "sprites/06-small-shops.png",
+      "searchRegion": [
+        1024,
+        0,
+        512,
+        500
+      ],
+      "targetAxis": "w",
+      "targetPixels": 310,
+      "spriteRect": [
+        1092,
+        46,
+        370,
+        411
+      ],
+      "uniformScale": 0.8378378378378378,
+      "displaySize": [
+        310,
+        344.4
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "general-store",
+      "label": "일반 상점",
+      "sheet": "sprites/06-small-shops.png",
+      "searchRegion": [
+        0,
+        500,
+        512,
+        524
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        88,
+        524,
+        354,
+        421
+      ],
+      "uniformScale": 0.9887,
+      "displaySize": [
+        350,
+        416.2
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "snack",
+      "label": "분식집",
+      "sheet": "sprites/06-small-shops.png",
+      "searchRegion": [
+        512,
+        500,
+        512,
+        524
+      ],
+      "targetAxis": "w",
+      "targetPixels": 310,
+      "spriteRect": [
+        575,
+        524,
+        344,
+        399
+      ],
+      "uniformScale": 0.9011627906976745,
+      "displaySize": [
+        310,
+        359.6
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "bookstore",
+      "label": "서점",
+      "sheet": "sprites/06-small-shops.png",
+      "searchRegion": [
+        1024,
+        500,
+        512,
+        524
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        1092,
+        525,
+        372,
+        413
+      ],
+      "uniformScale": 0.94086,
+      "displaySize": [
+        350,
+        388.6
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "house-blue",
+      "label": "파란 지붕 주택",
+      "sheet": "sprites/07-houses.png",
+      "searchRegion": [
+        0,
+        0,
+        768,
+        510
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        234,
+        17,
+        451,
+        466
+      ],
+      "uniformScale": 0.77605,
+      "displaySize": [
+        350,
+        361.6
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "house-gray",
+      "label": "회색 지붕 주택",
+      "sheet": "sprites/07-houses.png",
+      "searchRegion": [
+        768,
+        0,
+        768,
+        510
+      ],
+      "targetAxis": "w",
+      "targetPixels": 330,
+      "spriteRect": [
+        922,
+        17,
+        367,
+        466
+      ],
+      "uniformScale": 0.89918,
+      "displaySize": [
+        330,
+        419
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "house-orange",
+      "label": "주황 지붕 주택",
+      "sheet": "sprites/07-houses.png",
+      "searchRegion": [
+        0,
+        510,
+        768,
+        514
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        262,
+        527,
+        388,
+        447
+      ],
+      "uniformScale": 0.90206,
+      "displaySize": [
+        350,
+        403.2
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "house-brick",
+      "label": "벽돌 주택",
+      "sheet": "sprites/07-houses.png",
+      "searchRegion": [
+        768,
+        510,
+        768,
+        514
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        886,
+        534,
+        421,
+        444
+      ],
+      "uniformScale": 0.83135,
+      "displaySize": [
+        350,
+        369.1
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "house-green",
+      "label": "초록 평지붕 주택",
+      "sheet": "sprites/08-flat-roof-homes.png",
+      "searchRegion": [
+        0,
+        0,
+        800,
+        540
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        264,
+        79,
+        388,
+        417
+      ],
+      "uniformScale": 0.90206,
+      "displaySize": [
+        350,
+        376.2
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "residential-tall",
+      "label": "3층 일반 주택",
+      "sheet": "sprites/08-flat-roof-homes.png",
+      "searchRegion": [
+        800,
+        0,
+        736,
+        540
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        883,
+        22,
+        381,
+        499
+      ],
+      "uniformScale": 0.91864,
+      "displaySize": [
+        350,
+        458.4
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "duplex",
+      "label": "연립 주택",
+      "sheet": "sprites/08-flat-roof-homes.png",
+      "searchRegion": [
+        0,
+        540,
+        820,
+        484
+      ],
+      "targetAxis": "w",
+      "targetPixels": 500,
+      "spriteRect": [
+        221,
+        563,
+        560,
+        396
+      ],
+      "uniformScale": 0.89286,
+      "displaySize": [
+        500,
+        353.6
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "house-flat-blue",
+      "label": "파란 평지붕 주택",
+      "sheet": "sprites/08-flat-roof-homes.png",
+      "searchRegion": [
+        820,
+        540,
+        716,
+        484
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        934,
+        551,
+        363,
+        414
+      ],
+      "uniformScale": 0.96419,
+      "displaySize": [
+        350,
+        399.2
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "tree-round",
+      "label": "둥근 나무",
+      "sheet": "sprites/09-greenery.png",
+      "searchRegion": [
+        0,
+        0,
+        470,
+        690
+      ],
+      "targetAxis": "h",
+      "targetPixels": 420,
+      "spriteRect": [
+        44,
+        157,
+        411,
+        487
+      ],
+      "uniformScale": 0.86242,
+      "displaySize": [
+        354.5,
+        420
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "tree-tall",
+      "label": "긴 나무",
+      "sheet": "sprites/09-greenery.png",
+      "searchRegion": [
+        470,
+        0,
+        300,
+        690
+      ],
+      "targetAxis": "h",
+      "targetPixels": 480,
+      "spriteRect": [
+        476,
+        83,
+        270,
+        548
+      ],
+      "uniformScale": 0.87591,
+      "displaySize": [
+        236.5,
+        480
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "tree-wide",
+      "label": "넓은 나무",
+      "sheet": "sprites/09-greenery.png",
+      "searchRegion": [
+        770,
+        0,
+        410,
+        690
+      ],
+      "targetAxis": "h",
+      "targetPixels": 420,
+      "spriteRect": [
+        782,
+        189,
+        387,
+        446
+      ],
+      "uniformScale": 0.9417,
+      "displaySize": [
+        364.4,
+        420
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "tree-small",
+      "label": "작은 나무",
+      "sheet": "sprites/09-greenery.png",
+      "searchRegion": [
+        1180,
+        0,
+        356,
+        690
+      ],
+      "targetAxis": "h",
+      "targetPixels": 315,
+      "spriteRect": [
+        1209,
+        261,
+        286,
+        370
+      ],
+      "uniformScale": 0.85135,
+      "displaySize": [
+        243.5,
+        315
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "hedge",
+      "label": "낮은 생울타리",
+      "sheet": "sprites/09-greenery.png",
+      "searchRegion": [
+        0,
+        690,
+        470,
+        334
+      ],
+      "targetAxis": "w",
+      "targetPixels": 280,
+      "spriteRect": [
+        54,
+        773,
+        392,
+        157
+      ],
+      "uniformScale": 0.71429,
+      "displaySize": [
+        280,
+        112.1
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "shrub",
+      "label": "둥근 관목",
+      "sheet": "sprites/09-greenery.png",
+      "searchRegion": [
+        470,
+        690,
+        300,
+        334
+      ],
+      "targetAxis": "w",
+      "targetPixels": 150,
+      "spriteRect": [
+        494,
+        744,
+        229,
+        193
+      ],
+      "uniformScale": 0.65502,
+      "displaySize": [
+        150,
+        126.4
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "flowers",
+      "label": "꽃 화단",
+      "sheet": "sprites/09-greenery.png",
+      "searchRegion": [
+        770,
+        690,
+        385,
+        334
+      ],
+      "targetAxis": "w",
+      "targetPixels": 245,
+      "spriteRect": [
+        788,
+        790,
+        360,
+        140
+      ],
+      "uniformScale": 0.6805555555555556,
+      "displaySize": [
+        245,
+        95.3
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "border-plants",
+      "label": "경계 식재",
+      "sheet": "sprites/09-greenery.png",
+      "searchRegion": [
+        1180,
+        690,
+        356,
+        334
+      ],
+      "targetAxis": "w",
+      "targetPixels": 245,
+      "spriteRect": [
+        1180,
+        799,
+        320,
+        127
+      ],
+      "uniformScale": 0.76562,
+      "displaySize": [
+        245,
+        97.2
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "utility-pole",
+      "label": "전봇대",
+      "sheet": "sprites/10-street-fixtures.png",
+      "searchRegion": [
+        0,
+        0,
+        400,
+        620
+      ],
+      "targetAxis": "h",
+      "targetPixels": 350,
+      "spriteRect": [
+        99,
+        44,
+        175,
+        532
+      ],
+      "uniformScale": 0.65789,
+      "displaySize": [
+        115.1,
+        350
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "streetlamp",
+      "label": "차도 가로등",
+      "sheet": "sprites/10-street-fixtures.png",
+      "searchRegion": [
+        400,
+        0,
+        365,
+        620
+      ],
+      "targetAxis": "h",
+      "targetPixels": 280,
+      "spriteRect": [
+        510,
+        93,
+        175,
+        483
+      ],
+      "uniformScale": 0.57971,
+      "displaySize": [
+        101.4,
+        280
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "pathlamp",
+      "label": "보행로 가로등",
+      "sheet": "sprites/10-street-fixtures.png",
+      "searchRegion": [
+        765,
+        0,
+        275,
+        620
+      ],
+      "targetAxis": "h",
+      "targetPixels": 210,
+      "spriteRect": [
+        817,
+        313,
+        157,
+        260
+      ],
+      "uniformScale": 0.80769,
+      "displaySize": [
+        126.8,
+        210
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "bus-shelter",
+      "label": "버스 정류장",
+      "sheet": "sprites/10-street-fixtures.png",
+      "searchRegion": [
+        1040,
+        0,
+        496,
+        620
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        1055,
+        255,
+        430,
+        310
+      ],
+      "uniformScale": 0.81395,
+      "displaySize": [
+        350,
+        252.3
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "fence",
+      "label": "돌담과 철제 울타리",
+      "sheet": "sprites/10-street-fixtures.png",
+      "searchRegion": [
+        0,
+        620,
+        560,
+        404
+      ],
+      "targetAxis": "w",
+      "targetPixels": 350,
+      "spriteRect": [
+        73,
+        728,
+        458,
+        199
+      ],
+      "uniformScale": 0.76419,
+      "displaySize": [
+        350,
+        152.1
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "gatepost",
+      "label": "정문 기둥",
+      "sheet": "sprites/10-street-fixtures.png",
+      "searchRegion": [
+        560,
+        620,
+        245,
+        404
+      ],
+      "targetAxis": "h",
+      "targetPixels": 160,
+      "spriteRect": [
+        631,
+        710,
+        110,
+        239
+      ],
+      "uniformScale": 0.66946,
+      "displaySize": [
+        73.6,
+        160
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "noticeboard",
+      "label": "게시판",
+      "sheet": "sprites/10-street-fixtures.png",
+      "searchRegion": [
+        805,
+        620,
+        415,
+        404
+      ],
+      "targetAxis": "w",
+      "targetPixels": 210,
+      "spriteRect": [
+        863,
+        686,
+        326,
+        275
+      ],
+      "uniformScale": 0.64417,
+      "displaySize": [
+        210,
+        177.1
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "bus-sign",
+      "label": "버스 표지판",
+      "sheet": "sprites/10-street-fixtures.png",
+      "searchRegion": [
+        1220,
+        620,
+        316,
+        404
+      ],
+      "targetAxis": "h",
+      "targetPixels": 180,
+      "spriteRect": [
+        1321,
+        638,
+        111,
+        327
+      ],
+      "uniformScale": 0.55046,
+      "displaySize": [
+        61.1,
+        180
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "bench",
+      "label": "벤치",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        0,
+        0,
+        420,
+        380
+      ],
+      "targetAxis": "w",
+      "targetPixels": 160,
+      "spriteRect": [
+        84,
+        141,
+        302,
+        171
+      ],
+      "uniformScale": 0.5298,
+      "displaySize": [
+        160,
+        90.6
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "recycle",
+      "label": "재활용함",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        420,
+        0,
+        360,
+        380
+      ],
+      "targetAxis": "h",
+      "targetPixels": 90,
+      "spriteRect": [
+        530,
+        110,
+        159,
+        219
+      ],
+      "uniformScale": 0.41096,
+      "displaySize": [
+        65.3,
+        90
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "bin",
+      "label": "쓰레기통",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        780,
+        0,
+        330,
+        380
+      ],
+      "targetAxis": "h",
+      "targetPixels": 70,
+      "spriteRect": [
+        866,
+        120,
+        158,
+        207
+      ],
+      "uniformScale": 0.33816,
+      "displaySize": [
+        53.4,
+        70
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "vending",
+      "label": "자판기",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        1110,
+        0,
+        426,
+        380
+      ],
+      "targetAxis": "h",
+      "targetPixels": 150,
+      "spriteRect": [
+        1214,
+        20,
+        226,
+        341
+      ],
+      "uniformScale": 0.43988,
+      "displaySize": [
+        99.4,
+        150
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "rack",
+      "label": "상품 진열대",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        0,
+        380,
+        420,
+        310
+      ],
+      "targetAxis": "w",
+      "targetPixels": 130,
+      "spriteRect": [
+        94,
+        413,
+        281,
+        230
+      ],
+      "uniformScale": 0.46263,
+      "displaySize": [
+        130,
+        106.4
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "bicycle",
+      "label": "자전거",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        420,
+        380,
+        400,
+        310
+      ],
+      "targetAxis": "w",
+      "targetPixels": 140,
+      "spriteRect": [
+        444,
+        422,
+        346,
+        238
+      ],
+      "uniformScale": 0.40462,
+      "displaySize": [
+        140,
+        96.3
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "aircon",
+      "label": "실외기",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        820,
+        380,
+        290,
+        310
+      ],
+      "targetAxis": "w",
+      "targetPixels": 80,
+      "spriteRect": [
+        863,
+        431,
+        192,
+        216
+      ],
+      "uniformScale": 0.41667,
+      "displaySize": [
+        80,
+        90
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "planter",
+      "label": "사각 화분",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        1110,
+        380,
+        426,
+        310
+      ],
+      "targetAxis": "w",
+      "targetPixels": 95,
+      "spriteRect": [
+        1203,
+        422,
+        233,
+        227
+      ],
+      "uniformScale": 0.40773,
+      "displaySize": [
+        95,
+        92.6
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "drain",
+      "label": "빗물받이",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        0,
+        690,
+        420,
+        334
+      ],
+      "targetAxis": "w",
+      "targetPixels": 49,
+      "spriteRect": [
+        120,
+        785,
+        213,
+        149
+      ],
+      "uniformScale": 0.23005,
+      "displaySize": [
+        49,
+        34.3
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "manhole",
+      "label": "맨홀",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        420,
+        690,
+        360,
+        334
+      ],
+      "targetAxis": "w",
+      "targetPixels": 50,
+      "spriteRect": [
+        497,
+        759,
+        208,
+        192
+      ],
+      "uniformScale": 0.24038,
+      "displaySize": [
+        50,
+        46.2
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "bollard",
+      "label": "볼라드",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        780,
+        690,
+        305,
+        334
+      ],
+      "targetAxis": "h",
+      "targetPixels": 55,
+      "spriteRect": [
+        885,
+        728,
+        88,
+        227
+      ],
+      "uniformScale": 0.24229,
+      "displaySize": [
+        21.3,
+        55
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "cafe-table",
+      "label": "카페 테이블 세트",
+      "sheet": "sprites/11-street-props.png",
+      "searchRegion": [
+        1085,
+        690,
+        451,
+        334
+      ],
+      "targetAxis": "w",
+      "targetPixels": 180,
+      "spriteRect": [
+        1099,
+        721,
+        395,
+        244
+      ],
+      "uniformScale": 0.4557,
+      "displaySize": [
+        180,
+        111.2
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "blue-car",
+      "label": "파란 승용차",
+      "sheet": "sprites/12-vehicles.png",
+      "searchRegion": [
+        0,
+        0,
+        768,
+        475
+      ],
+      "targetAxis": "w",
+      "targetPixels": 245,
+      "spriteRect": [
+        180,
+        140,
+        473,
+        311
+      ],
+      "uniformScale": 0.51797,
+      "displaySize": [
+        245,
+        161.1
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "police-car",
+      "label": "경찰차",
+      "sheet": "sprites/12-vehicles.png",
+      "searchRegion": [
+        768,
+        0,
+        768,
+        475
+      ],
+      "targetAxis": "w",
+      "targetPixels": 270,
+      "spriteRect": [
+        831,
+        113,
+        564,
+        338
+      ],
+      "uniformScale": 0.47872,
+      "displaySize": [
+        270,
+        161.8
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "ambulance",
+      "label": "구급차",
+      "sheet": "sprites/12-vehicles.png",
+      "searchRegion": [
+        0,
+        475,
+        768,
+        549
+      ],
+      "targetAxis": "h",
+      "targetPixels": 250,
+      "spriteRect": [
+        262,
+        491,
+        294,
+        455
+      ],
+      "uniformScale": 0.54945,
+      "displaySize": [
+        161.5,
+        250
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "van",
+      "label": "승합차",
+      "sheet": "sprites/12-vehicles.png",
+      "searchRegion": [
+        768,
+        475,
+        768,
+        549
+      ],
+      "targetAxis": "h",
+      "targetPixels": 225,
+      "spriteRect": [
+        998,
+        545,
+        259,
+        390
+      ],
+      "uniformScale": 0.57692,
+      "displaySize": [
+        149.4,
+        225
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "park-terrace",
+      "label": "공원 원형 단",
+      "sheet": "sprites/13-park-campus-details.png",
+      "searchRegion": [
+        0,
+        0,
+        610,
+        510
+      ],
+      "targetAxis": "w",
+      "targetPixels": 420,
+      "spriteRect": [
+        66,
+        125,
+        501,
+        348
+      ],
+      "uniformScale": 0.83832,
+      "displaySize": [
+        420,
+        291.7
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "round-planter",
+      "label": "원형 화단",
+      "sheet": "sprites/13-park-campus-details.png",
+      "searchRegion": [
+        610,
+        0,
+        490,
+        510
+      ],
+      "targetAxis": "w",
+      "targetPixels": 190,
+      "spriteRect": [
+        698,
+        164,
+        347,
+        276
+      ],
+      "uniformScale": 0.54755,
+      "displaySize": [
+        190,
+        151.1
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "emergency-box",
+      "label": "비상 호출기",
+      "sheet": "sprites/13-park-campus-details.png",
+      "searchRegion": [
+        1100,
+        0,
+        436,
+        510
+      ],
+      "targetAxis": "h",
+      "targetPixels": 110,
+      "spriteRect": [
+        1241,
+        87,
+        125,
+        369
+      ],
+      "uniformScale": 0.2981,
+      "displaySize": [
+        37.3,
+        110
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "bike-rack",
+      "label": "자전거 거치대",
+      "sheet": "sprites/13-park-campus-details.png",
+      "searchRegion": [
+        0,
+        510,
+        640,
+        514
+      ],
+      "targetAxis": "w",
+      "targetPixels": 210,
+      "spriteRect": [
+        70,
+        689,
+        527,
+        158
+      ],
+      "uniformScale": 0.39848,
+      "displaySize": [
+        210,
+        63
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "pot",
+      "label": "관목 화분",
+      "sheet": "sprites/13-park-campus-details.png",
+      "searchRegion": [
+        640,
+        510,
+        460,
+        514
+      ],
+      "targetAxis": "h",
+      "targetPixels": 105,
+      "spriteRect": [
+        750,
+        643,
+        201,
+        262
+      ],
+      "uniformScale": 0.40076,
+      "displaySize": [
+        80.6,
+        105
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "id": "traffic-light",
+      "label": "신호등",
+      "sheet": "sprites/13-park-campus-details.png",
+      "searchRegion": [
+        1100,
+        510,
+        436,
+        514
+      ],
+      "targetAxis": "h",
+      "targetPixels": 240,
+      "spriteRect": [
+        1237,
+        534,
+        176,
+        423
+      ],
+      "uniformScale": 0.56738,
+      "displaySize": [
+        99.9,
+        240
+      ],
+      "sheetSize": [
+        1536,
+        1024
+      ]
+    }
+  ]
+}

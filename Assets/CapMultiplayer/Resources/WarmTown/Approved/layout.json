@@ -1,0 +1,1356 @@
+{
+  "pieces": [
+    {
+      "name": "Court A terracotta house",
+      "x": 55,
+      "y": 25,
+      "w": 155,
+      "h": 127,
+      "foot": 149,
+      "crown": false,
+      "solid": [
+        60,
+        65.64,
+        145,
+        82.36
+      ]
+    },
+    {
+      "name": "Court A flat roof house",
+      "x": 219,
+      "y": 21,
+      "w": 108,
+      "h": 126,
+      "foot": 144,
+      "crown": false,
+      "solid": [
+        224,
+        61.32,
+        98,
+        81.68
+      ]
+    },
+    {
+      "name": "Court A teal house",
+      "x": 329,
+      "y": 24,
+      "w": 141,
+      "h": 129,
+      "foot": 150,
+      "crown": false,
+      "solid": [
+        334,
+        65.28,
+        131,
+        83.72000000000001
+      ]
+    },
+    {
+      "name": "Court A west house",
+      "x": 55,
+      "y": 145,
+      "w": 137,
+      "h": 113,
+      "foot": 255,
+      "crown": false,
+      "solid": [
+        60,
+        181.16,
+        127,
+        72.84
+      ]
+    },
+    {
+      "name": "Court A south west house",
+      "x": 63,
+      "y": 249,
+      "w": 81,
+      "h": 77,
+      "foot": 323,
+      "crown": false,
+      "solid": [
+        68,
+        273.64,
+        71,
+        48.36000000000001
+      ]
+    },
+    {
+      "name": "Court A south east house",
+      "x": 348,
+      "y": 195,
+      "w": 121,
+      "h": 115,
+      "foot": 307,
+      "crown": false,
+      "solid": [
+        353,
+        231.8,
+        111,
+        74.2
+      ]
+    },
+    {
+      "name": "Court B north west",
+      "x": 545,
+      "y": 45,
+      "w": 149,
+      "h": 113,
+      "foot": 155,
+      "crown": false,
+      "solid": [
+        550,
+        81.16,
+        139,
+        72.84
+      ]
+    },
+    {
+      "name": "Court B north middle",
+      "x": 697,
+      "y": 29,
+      "w": 158,
+      "h": 133,
+      "foot": 159,
+      "crown": false,
+      "solid": [
+        702,
+        71.56,
+        148,
+        86.44000000000001
+      ]
+    },
+    {
+      "name": "Court B north east",
+      "x": 861,
+      "y": 29,
+      "w": 121,
+      "h": 126,
+      "foot": 152,
+      "crown": false,
+      "solid": [
+        866,
+        69.32,
+        111,
+        81.68
+      ]
+    },
+    {
+      "name": "Court B west wing",
+      "x": 551,
+      "y": 153,
+      "w": 122,
+      "h": 106,
+      "foot": 256,
+      "crown": false,
+      "solid": [
+        556,
+        186.92000000000002,
+        112,
+        68.08
+      ]
+    },
+    {
+      "name": "Court B east wing",
+      "x": 858,
+      "y": 143,
+      "w": 128,
+      "h": 121,
+      "foot": 261,
+      "crown": false,
+      "solid": [
+        863,
+        181.72,
+        118,
+        78.28
+      ]
+    },
+    {
+      "name": "Campus club north building",
+      "x": 1188,
+      "y": 3,
+      "w": 221,
+      "h": 123,
+      "foot": 123,
+      "crown": false,
+      "solid": [
+        1193,
+        42.36,
+        211,
+        79.64
+      ]
+    },
+    {
+      "name": "Campus west north wing",
+      "x": 1048,
+      "y": 20,
+      "w": 143,
+      "h": 73,
+      "foot": 90,
+      "crown": false,
+      "solid": [
+        1053,
+        43.36,
+        133,
+        45.64
+      ]
+    },
+    {
+      "name": "Campus west wing",
+      "x": 1045,
+      "y": 89,
+      "w": 57,
+      "h": 171,
+      "foot": 257,
+      "crown": false,
+      "solid": [
+        1050,
+        143.72,
+        47,
+        112.28000000000002
+      ]
+    },
+    {
+      "name": "Campus east wing",
+      "x": 1406,
+      "y": 19,
+      "w": 109,
+      "h": 277,
+      "foot": 293,
+      "crown": false,
+      "solid": [
+        1411,
+        107.64,
+        99,
+        184.36
+      ]
+    },
+    {
+      "name": "Laundry shop",
+      "x": 55,
+      "y": 336,
+      "w": 160,
+      "h": 258,
+      "foot": 591,
+      "crown": false,
+      "solid": [
+        60,
+        418.56,
+        150,
+        171.44000000000003
+      ]
+    },
+    {
+      "name": "Convenience store 24",
+      "x": 211,
+      "y": 463,
+      "w": 229,
+      "h": 129,
+      "foot": 589,
+      "crown": false,
+      "solid": [
+        216,
+        504.28,
+        219,
+        83.72000000000001
+      ]
+    },
+    {
+      "name": "Hardware shop",
+      "x": 559,
+      "y": 491,
+      "w": 215,
+      "h": 99,
+      "foot": 587,
+      "crown": false,
+      "solid": [
+        564,
+        522.68,
+        205,
+        63.32000000000001
+      ]
+    },
+    {
+      "name": "Neighborhood supplies",
+      "x": 774,
+      "y": 489,
+      "w": 204,
+      "h": 107,
+      "foot": 593,
+      "crown": false,
+      "solid": [
+        779,
+        523.24,
+        194,
+        68.76
+      ]
+    },
+    {
+      "name": "Campus plaza west building",
+      "x": 1043,
+      "y": 349,
+      "w": 129,
+      "h": 141,
+      "foot": 487,
+      "crown": false,
+      "solid": [
+        1048,
+        394.12,
+        119,
+        91.88000000000001
+      ]
+    },
+    {
+      "name": "Campus plaza east building",
+      "x": 1370,
+      "y": 349,
+      "w": 116,
+      "h": 153,
+      "foot": 499,
+      "crown": false,
+      "solid": [
+        1375,
+        397.96,
+        106,
+        100.04
+      ]
+    },
+    {
+      "name": "Coffee shop",
+      "x": 1081,
+      "y": 481,
+      "w": 194,
+      "h": 114,
+      "foot": 592,
+      "crown": false,
+      "solid": [
+        1086,
+        517.48,
+        184,
+        73.52000000000001
+      ]
+    },
+    {
+      "name": "Bookstore",
+      "x": 1277,
+      "y": 484,
+      "w": 211,
+      "h": 115,
+      "foot": 596,
+      "crown": false,
+      "solid": [
+        1282,
+        520.8,
+        201,
+        74.2
+      ]
+    },
+    {
+      "name": "South front house blue",
+      "x": 56,
+      "y": 699,
+      "w": 114,
+      "h": 113,
+      "foot": 809,
+      "crown": false,
+      "solid": [
+        61,
+        735.16,
+        104,
+        72.84
+      ]
+    },
+    {
+      "name": "South front house teal",
+      "x": 170,
+      "y": 699,
+      "w": 119,
+      "h": 113,
+      "foot": 809,
+      "crown": false,
+      "solid": [
+        175,
+        735.16,
+        109,
+        72.84
+      ]
+    },
+    {
+      "name": "South front house brick",
+      "x": 289,
+      "y": 698,
+      "w": 183,
+      "h": 114,
+      "foot": 809,
+      "crown": false,
+      "solid": [
+        294,
+        734.48,
+        173,
+        73.52000000000001
+      ]
+    },
+    {
+      "name": "South front house mint",
+      "x": 555,
+      "y": 698,
+      "w": 101,
+      "h": 115,
+      "foot": 810,
+      "crown": false,
+      "solid": [
+        560,
+        734.8,
+        91,
+        74.2
+      ]
+    },
+    {
+      "name": "South front house slate",
+      "x": 656,
+      "y": 698,
+      "w": 100,
+      "h": 115,
+      "foot": 810,
+      "crown": false,
+      "solid": [
+        661,
+        734.8,
+        90,
+        74.2
+      ]
+    },
+    {
+      "name": "South front house beige",
+      "x": 756,
+      "y": 698,
+      "w": 96,
+      "h": 115,
+      "foot": 810,
+      "crown": false,
+      "solid": [
+        761,
+        734.8,
+        86,
+        74.2
+      ]
+    },
+    {
+      "name": "South front house green",
+      "x": 852,
+      "y": 698,
+      "w": 99,
+      "h": 115,
+      "foot": 810,
+      "crown": false,
+      "solid": [
+        857,
+        734.8,
+        89,
+        74.2
+      ]
+    },
+    {
+      "name": "South rear blue",
+      "x": 57,
+      "y": 841,
+      "w": 121,
+      "h": 114,
+      "foot": 952,
+      "crown": false,
+      "solid": [
+        62,
+        877.48,
+        111,
+        73.52000000000001
+      ]
+    },
+    {
+      "name": "South rear terra",
+      "x": 179,
+      "y": 841,
+      "w": 135,
+      "h": 114,
+      "foot": 952,
+      "crown": false,
+      "solid": [
+        184,
+        877.48,
+        125,
+        73.52000000000001
+      ]
+    },
+    {
+      "name": "South rear slate",
+      "x": 315,
+      "y": 841,
+      "w": 117,
+      "h": 114,
+      "foot": 952,
+      "crown": false,
+      "solid": [
+        320,
+        877.48,
+        107,
+        73.52000000000001
+      ]
+    },
+    {
+      "name": "South rear teal",
+      "x": 433,
+      "y": 841,
+      "w": 113,
+      "h": 114,
+      "foot": 952,
+      "crown": false,
+      "solid": [
+        438,
+        877.48,
+        103,
+        73.52000000000001
+      ]
+    },
+    {
+      "name": "South rear red",
+      "x": 549,
+      "y": 841,
+      "w": 125,
+      "h": 114,
+      "foot": 952,
+      "crown": false,
+      "solid": [
+        554,
+        877.48,
+        115,
+        73.52000000000001
+      ]
+    },
+    {
+      "name": "South rear green",
+      "x": 676,
+      "y": 841,
+      "w": 118,
+      "h": 114,
+      "foot": 952,
+      "crown": false,
+      "solid": [
+        681,
+        877.48,
+        108,
+        73.52000000000001
+      ]
+    },
+    {
+      "name": "South rear flat roof",
+      "x": 794,
+      "y": 841,
+      "w": 158,
+      "h": 114,
+      "foot": 952,
+      "crown": false,
+      "solid": [
+        799,
+        877.48,
+        148,
+        73.52000000000001
+      ]
+    },
+    {
+      "name": "Hospital",
+      "x": 1074,
+      "y": 717,
+      "w": 236,
+      "h": 183,
+      "foot": 897,
+      "crown": false,
+      "solid": [
+        1079,
+        775.56,
+        226,
+        120.44000000000001
+      ]
+    },
+    {
+      "name": "Workshop",
+      "x": 1311,
+      "y": 719,
+      "w": 127,
+      "h": 178,
+      "foot": 894,
+      "crown": false,
+      "solid": [
+        1316,
+        775.96,
+        117,
+        117.04
+      ]
+    },
+    {
+      "name": "Court A tree",
+      "x": 191,
+      "y": 182,
+      "w": 98,
+      "h": 121,
+      "foot": 297,
+      "crown": true,
+      "solid": [
+        235.1,
+        290,
+        9.8,
+        10
+      ]
+    },
+    {
+      "name": "Court B tree",
+      "x": 700,
+      "y": 166,
+      "w": 97,
+      "h": 82,
+      "foot": 242,
+      "crown": true,
+      "solid": [
+        743.65,
+        235,
+        9.700000000000001,
+        10
+      ]
+    },
+    {
+      "name": "Campus west tree",
+      "x": 1064,
+      "y": 36,
+      "w": 118,
+      "h": 125,
+      "foot": 155,
+      "crown": true,
+      "solid": [
+        1117.1,
+        148,
+        11.8,
+        10
+      ]
+    },
+    {
+      "name": "Campus middle tree",
+      "x": 1097,
+      "y": 135,
+      "w": 104,
+      "h": 135,
+      "foot": 264,
+      "crown": true,
+      "solid": [
+        1143.8,
+        257,
+        10.4,
+        10
+      ]
+    },
+    {
+      "name": "Campus east tree",
+      "x": 1296,
+      "y": 111,
+      "w": 144,
+      "h": 136,
+      "foot": 241,
+      "crown": true,
+      "solid": [
+        1360.8,
+        234,
+        14.4,
+        10
+      ]
+    },
+    {
+      "name": "Campus plaza tree",
+      "x": 1226,
+      "y": 338,
+      "w": 91,
+      "h": 109,
+      "foot": 441,
+      "crown": true,
+      "solid": [
+        1266.95,
+        434,
+        9.1,
+        10
+      ]
+    },
+    {
+      "name": "Park west tree",
+      "x": 556,
+      "y": 326,
+      "w": 128,
+      "h": 118,
+      "foot": 438,
+      "crown": true,
+      "solid": [
+        613.6,
+        431,
+        12.8,
+        10
+      ]
+    },
+    {
+      "name": "Park north east tree",
+      "x": 873,
+      "y": 265,
+      "w": 110,
+      "h": 123,
+      "foot": 382,
+      "crown": true,
+      "solid": [
+        922.5,
+        375,
+        11.0,
+        10
+      ]
+    },
+    {
+      "name": "Park east tree",
+      "x": 904,
+      "y": 334,
+      "w": 76,
+      "h": 101,
+      "foot": 429,
+      "crown": true,
+      "solid": [
+        938.2,
+        422,
+        7.6000000000000005,
+        10
+      ]
+    },
+    {
+      "name": "Side court tree",
+      "x": 174,
+      "y": 315,
+      "w": 57,
+      "h": 60,
+      "foot": 369,
+      "crown": true,
+      "solid": [
+        199.65,
+        362,
+        5.7,
+        10
+      ]
+    },
+    {
+      "name": "Parking edge tree",
+      "x": 413,
+      "y": 369,
+      "w": 62,
+      "h": 92,
+      "foot": 455,
+      "crown": true,
+      "solid": [
+        440.9,
+        448,
+        6.2,
+        10
+      ]
+    },
+    {
+      "name": "South hospital tree upper",
+      "x": 1005,
+      "y": 728,
+      "w": 71,
+      "h": 90,
+      "foot": 812,
+      "crown": true,
+      "solid": [
+        1036.95,
+        805,
+        7.1000000000000005,
+        10
+      ]
+    },
+    {
+      "name": "South hospital tree lower",
+      "x": 1000,
+      "y": 822,
+      "w": 72,
+      "h": 83,
+      "foot": 899,
+      "crown": true,
+      "solid": [
+        1032.4,
+        892,
+        7.2,
+        10
+      ]
+    },
+    {
+      "name": "Park north bench",
+      "x": 825,
+      "y": 338,
+      "w": 39,
+      "h": 25,
+      "foot": 361,
+      "crown": false,
+      "solid": [
+        828.0,
+        356,
+        33,
+        7
+      ]
+    },
+    {
+      "name": "Park west bench",
+      "x": 642,
+      "y": 333,
+      "w": 44,
+      "h": 25,
+      "foot": 356,
+      "crown": false,
+      "solid": [
+        645.0,
+        351,
+        38,
+        7
+      ]
+    },
+    {
+      "name": "Park south bench",
+      "x": 726,
+      "y": 459,
+      "w": 38,
+      "h": 25,
+      "foot": 482,
+      "crown": false,
+      "solid": [
+        729.0,
+        477,
+        32,
+        7
+      ]
+    },
+    {
+      "name": "Park south east bench",
+      "x": 840,
+      "y": 459,
+      "w": 37,
+      "h": 25,
+      "foot": 482,
+      "crown": false,
+      "solid": [
+        843.0,
+        477,
+        31,
+        7
+      ]
+    },
+    {
+      "name": "Campus bicycle rack",
+      "x": 1183,
+      "y": 192,
+      "w": 78,
+      "h": 40,
+      "foot": 230,
+      "crown": false,
+      "solid": [
+        1186.0,
+        225,
+        72,
+        7
+      ]
+    },
+    {
+      "name": "Campus noticeboard",
+      "x": 1332,
+      "y": 210,
+      "w": 76,
+      "h": 48,
+      "foot": 256,
+      "crown": false,
+      "solid": [
+        1335.0,
+        251,
+        70,
+        7
+      ]
+    },
+    {
+      "name": "Park notice plaque",
+      "x": 920,
+      "y": 451,
+      "w": 34,
+      "h": 37,
+      "foot": 486,
+      "crown": false,
+      "solid": [
+        923.0,
+        481,
+        28,
+        7
+      ]
+    },
+    {
+      "name": "Parked courtyard car",
+      "x": 277,
+      "y": 375,
+      "w": 49,
+      "h": 73,
+      "foot": 446,
+      "crown": false,
+      "solid": [
+        280.0,
+        441,
+        43,
+        7
+      ]
+    },
+    {
+      "name": "Parked workshop van",
+      "x": 1466,
+      "y": 744,
+      "w": 48,
+      "h": 84,
+      "foot": 826,
+      "crown": false,
+      "solid": [
+        1469.0,
+        821,
+        42,
+        7
+      ]
+    },
+    {
+      "name": "Convenience vending machine",
+      "x": 433,
+      "y": 537,
+      "w": 29,
+      "h": 62,
+      "foot": 597,
+      "crown": false,
+      "solid": [
+        436.0,
+        592,
+        23,
+        7
+      ]
+    },
+    {
+      "name": "South vending machine",
+      "x": 877,
+      "y": 769,
+      "w": 29,
+      "h": 47,
+      "foot": 814,
+      "crown": false,
+      "solid": [
+        880.0,
+        809,
+        23,
+        7
+      ]
+    },
+    {
+      "name": "Utility pole 0",
+      "x": 480,
+      "y": 0,
+      "w": 20,
+      "h": 133,
+      "foot": 131,
+      "crown": false,
+      "solid": [
+        487.0,
+        127,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 1",
+      "x": 554,
+      "y": 156,
+      "w": 22,
+      "h": 154,
+      "foot": 308,
+      "crown": false,
+      "solid": [
+        562.0,
+        304,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 2",
+      "x": 995,
+      "y": 160,
+      "w": 26,
+      "h": 138,
+      "foot": 296,
+      "crown": false,
+      "solid": [
+        1005.0,
+        292,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 3",
+      "x": 977,
+      "y": 404,
+      "w": 22,
+      "h": 203,
+      "foot": 605,
+      "crown": false,
+      "solid": [
+        985.0,
+        601,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 4",
+      "x": 1050,
+      "y": 305,
+      "w": 25,
+      "h": 190,
+      "foot": 493,
+      "crown": false,
+      "solid": [
+        1059.5,
+        489,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 5",
+      "x": 65,
+      "y": 469,
+      "w": 21,
+      "h": 145,
+      "foot": 612,
+      "crown": false,
+      "solid": [
+        72.5,
+        608,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 6",
+      "x": 462,
+      "y": 386,
+      "w": 23,
+      "h": 228,
+      "foot": 612,
+      "crown": false,
+      "solid": [
+        470.5,
+        608,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 7",
+      "x": 683,
+      "y": 390,
+      "w": 22,
+      "h": 102,
+      "foot": 490,
+      "crown": false,
+      "solid": [
+        691.0,
+        486,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 8",
+      "x": 1438,
+      "y": 468,
+      "w": 25,
+      "h": 147,
+      "foot": 613,
+      "crown": false,
+      "solid": [
+        1447.5,
+        609,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 9",
+      "x": 305,
+      "y": 686,
+      "w": 18,
+      "h": 100,
+      "foot": 784,
+      "crown": false,
+      "solid": [
+        311.0,
+        780,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 10",
+      "x": 1417,
+      "y": 693,
+      "w": 24,
+      "h": 144,
+      "foot": 835,
+      "crown": false,
+      "solid": [
+        1426.0,
+        831,
+        6,
+        6
+      ]
+    },
+    {
+      "name": "Utility pole 11",
+      "x": 1452,
+      "y": 644,
+      "w": 21,
+      "h": 149,
+      "foot": 791,
+      "crown": false,
+      "solid": [
+        1459.5,
+        787,
+        6,
+        6
+      ]
+    }
+  ],
+  "barriers": [
+    {
+      "name": "North green edge",
+      "solid": [
+        0,
+        0,
+        1584,
+        15
+      ]
+    },
+    {
+      "name": "West green edge",
+      "solid": [
+        0,
+        0,
+        42,
+        993
+      ]
+    },
+    {
+      "name": "East green edge",
+      "solid": [
+        1545,
+        0,
+        39,
+        993
+      ]
+    },
+    {
+      "name": "South green edge",
+      "solid": [
+        0,
+        965,
+        1584,
+        28
+      ]
+    },
+    {
+      "name": "A south wall west",
+      "solid": [
+        137,
+        306,
+        114,
+        19
+      ]
+    },
+    {
+      "name": "A south wall east",
+      "solid": [
+        313,
+        306,
+        164,
+        19
+      ]
+    },
+    {
+      "name": "A east boundary",
+      "solid": [
+        471,
+        139,
+        10,
+        176
+      ]
+    },
+    {
+      "name": "A west boundary",
+      "solid": [
+        47,
+        140,
+        9,
+        187
+      ]
+    },
+    {
+      "name": "B south wall west",
+      "solid": [
+        553,
+        261,
+        143,
+        23
+      ]
+    },
+    {
+      "name": "B south wall east",
+      "solid": [
+        757,
+        261,
+        224,
+        23
+      ]
+    },
+    {
+      "name": "B west wall",
+      "solid": [
+        541,
+        155,
+        10,
+        106
+      ]
+    },
+    {
+      "name": "B east wall",
+      "solid": [
+        985,
+        146,
+        8,
+        136
+      ]
+    },
+    {
+      "name": "Campus west boundary",
+      "solid": [
+        1032,
+        21,
+        12,
+        293
+      ]
+    },
+    {
+      "name": "Campus south left wall",
+      "solid": [
+        1044,
+        303,
+        129,
+        22
+      ]
+    },
+    {
+      "name": "Campus south right wall",
+      "solid": [
+        1352,
+        312,
+        164,
+        24
+      ]
+    },
+    {
+      "name": "Campus east boundary",
+      "solid": [
+        1517,
+        19,
+        15,
+        315
+      ]
+    },
+    {
+      "name": "Park west shrub edge",
+      "solid": [
+        546,
+        327,
+        20,
+        158
+      ]
+    },
+    {
+      "name": "Park north left shrubs",
+      "solid": [
+        560,
+        321,
+        177,
+        22
+      ]
+    },
+    {
+      "name": "Park north right shrubs",
+      "solid": [
+        770,
+        321,
+        201,
+        22
+      ]
+    },
+    {
+      "name": "Park east shrub edge",
+      "solid": [
+        967,
+        335,
+        13,
+        150
+      ]
+    },
+    {
+      "name": "Hospital west planted edge",
+      "solid": [
+        1013,
+        735,
+        28,
+        230
+      ]
+    },
+    {
+      "name": "Hospital south fence",
+      "solid": [
+        1090,
+        964,
+        430,
+        16
+      ]
+    },
+    {
+      "name": "Parking recess north wall",
+      "solid": [
+        255,
+        361,
+        167,
+        10
+      ]
+    },
+    {
+      "name": "Parking recess east wall",
+      "solid": [
+        407,
+        375,
+        10,
+        80
+      ]
+    },
+    {
+      "name": "Court A rear barrier",
+      "solid": [
+        200,
+        38,
+        16,
+        106
+      ]
+    }
+  ]
+}
