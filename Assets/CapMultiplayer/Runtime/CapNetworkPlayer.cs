@@ -9,6 +9,9 @@ namespace Cap.Multiplayer
     public sealed class CapNetworkPlayer : NetworkBehaviour
     {
         [SerializeField] private float speed = 3.5f;
+        public static Vector2? TestInput; // Development test input; null during normal play.
+        private bool mapRequested;
+        public readonly NetworkVariable<bool> ViewingMap=new NetworkVariable<bool>(false);
         private Vector2 serverInput;
         private float lastInputTime;
         private float nextSend;
@@ -30,6 +33,7 @@ namespace Cap.Multiplayer
         {
             if (!IsServer || !IsSpawned) return;
             InTown.Value = value;
+            ViewingMap.Value=false;
             serverInput = Vector2.zero;
             Riding.Value=false;
             Locomotion.Value=6;
@@ -56,9 +60,9 @@ namespace Cap.Multiplayer
                 visual = child.AddComponent<SpriteRenderer>(); visual.sprite = art;
                 visual.sharedMaterial=CapWarmTown.Instance.ArtMaterial;
                 // Counter the original prefab's non-uniform rectangle scale.
-                float target = 1.65f / art.bounds.size.y;
-                child.transform.localScale = new Vector3(target / transform.localScale.x, target / transform.localScale.y, 1);
-                child.AddComponent<CapCharacterAnimation>().Initialize(this,visual,slot);
+                float target = CapWarmTown.ReferencePlayerHeight / art.bounds.size.y;
+                child.transform.localScale = new Vector3(target * .67f / transform.localScale.x, target / transform.localScale.y, 1);
+                visual.color = colors[slot];
             }
             if (IsServer)
                 foreach (var other in FindObjectsByType<CapNetworkPlayer>(FindObjectsSortMode.None))
@@ -74,6 +78,7 @@ namespace Cap.Multiplayer
         private void Update()
         {
             if (!IsSpawned) return;
+            if(!InTown.Value)mapRequested=false;
             if (IsOwner)
             {
                 Vector2 input = Vector2.zero;
@@ -87,7 +92,8 @@ namespace Cap.Multiplayer
                             - ((k.sKey.isPressed || k.downArrowKey.isPressed) ? 1 : 0);
                 }
                 if (smokeMove) input = new Vector2(Mathf.Sin(Time.unscaledTime), Mathf.Cos(Time.unscaledTime));
-                if (CapWalkSmoke.InputOverride.HasValue) input=CapWalkSmoke.InputOverride.Value;
+                if (TestInput.HasValue) input=TestInput.Value;
+                if(mapRequested || ViewingMap.Value || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))input=Vector2.zero;
                 input=Vector2.ClampMagnitude(input,1);
                 if(input!=sentInput || Time.unscaledTime>=nextSend)
                 {
@@ -102,14 +108,27 @@ namespace Cap.Multiplayer
             }
         }
 
+        // The owner requests map mode; the host enforces the movement lock.
+        public void SetMapViewing(bool open) {
+            if(!IsSpawned || !IsOwner)return;
+            mapRequested=open && InTown.Value;sentInput=Vector2.zero;nextSend=0;
+            SetMapViewingRpc(mapRequested);
+        }
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
+        private void SetMapViewingRpc(bool open) {
+            ViewingMap.Value=open && InTown.Value;
+            serverInput=Vector2.zero;Locomotion.Value=(byte)(Locomotion.Value&7);
+            lastInputTime=Time.unscaledTime;
+        }
+
         public void ToggleBicycle()
         {
-            if(IsSpawned && IsOwner && InTown.Value) ToggleBicycleRpc();
+            if(IsSpawned && IsOwner && InTown.Value && !mapRequested && !ViewingMap.Value) ToggleBicycleRpc();
         }
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
         private void ToggleBicycleRpc()
         {
-            if(!InTown.Value || Time.unscaledTime<nextBikeToggle) return;
+            if(!InTown.Value || ViewingMap.Value || Time.unscaledTime<nextBikeToggle) return;
             nextBikeToggle=Time.unscaledTime+.3f;
             Riding.Value=!Riding.Value;
         }
@@ -118,7 +137,7 @@ namespace Cap.Multiplayer
         private void SubmitInputRpc(Vector2 input)
         {
             if (float.IsNaN(input.x) || float.IsNaN(input.y) || float.IsInfinity(input.x) || float.IsInfinity(input.y)) return;
-            serverInput = Vector2.ClampMagnitude(input, 1);
+            serverInput = ViewingMap.Value ? Vector2.zero : Vector2.ClampMagnitude(input, 1);
             lastInputTime = Time.unscaledTime;
         }
 
@@ -128,7 +147,7 @@ namespace Cap.Multiplayer
             previousStep=currentStep;
             // NetworkTransform teleports (including development tools) must not interpolate across the map.
             if((transform.position-currentStep).sqrMagnitude>.01f) previousStep=transform.position;
-            if (Time.unscaledTime - lastInputTime > .25f) serverInput = Vector2.zero;
+            if (ViewingMap.Value || Time.unscaledTime - lastInputTime > .25f) serverInput = Vector2.zero;
             if (InTown.Value && CapWarmTown.Instance != null)
             {
                 var next=CapWarmTown.Instance.Move(transform.position, serverInput * (Riding.Value?9:5) * Time.fixedDeltaTime);

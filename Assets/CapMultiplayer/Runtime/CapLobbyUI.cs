@@ -24,6 +24,8 @@ namespace Cap.Multiplayer
         private void OnGUI()
         {
             if (CapWarmTown.Instance != null && CapWarmTown.Instance.InTown) return;
+            var local=NetworkManager.Singleton?.LocalClient?.PlayerObject;
+            if(local!=null && local.GetComponent<CapNetworkPlayer>().InTown.Value)return;
             var connection = CapRelaySession.Instance;
             if (connection == null) return;
             PrepareStyles();

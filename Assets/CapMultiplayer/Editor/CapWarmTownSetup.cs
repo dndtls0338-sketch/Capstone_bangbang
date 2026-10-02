@@ -40,13 +40,12 @@ namespace Cap.Editor
         public static void Build()
         {
             AssetDatabase.Refresh();
-            foreach(var file in Directory.GetFiles("Assets/CapMultiplayer/Resources/WarmTown","*.png"))
-                AssetDatabase.ImportAsset(file,ImportAssetOptions.ForceUpdate);
             Directory.CreateDirectory("Builds/CapWarmTown");
             var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions {
                 scenes=new[]{"Assets/CapMultiplayer/Scenes/CapRelayTest.unity"},
                 locationPathName="Builds/CapWarmTown/cap.exe",target=BuildTarget.StandaloneWindows64,options=BuildOptions.Development
             });
+            Directory.CreateDirectory("CapSetupBackup");
             File.WriteAllText("CapSetupBackup/warm-town-build-result.txt",DateTime.UtcNow.ToString("O")+" "+report.summary.result+" errors="+report.summary.totalErrors+" warnings="+report.summary.totalWarnings);
             // Refresh editor assemblies too: player-build compilation does not reload the editor's runtime DLL.
             UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
