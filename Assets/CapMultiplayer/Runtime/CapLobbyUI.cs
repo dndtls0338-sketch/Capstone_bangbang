@@ -12,6 +12,11 @@ namespace Cap.Multiplayer
         private Page page;
         private string code="",notice="";
         private bool wasConnected,joinAttempted;
+        private static CapLobbyUI activeProfileEditor;
+        private bool profileOpen;
+        private string profileName="";
+        private int profileColor;
+        public static bool ProfileEditing=>activeProfileEditor!=null && activeProfileEditor.profileOpen;
         private float volume=1;
         private bool fullscreen;
         private Font font;
@@ -33,19 +38,55 @@ namespace Cap.Multiplayer
         }
         private void Update()
         {
+            if(CapLoadingScreen.Blocking)return;
             var connection=CapRelaySession.Instance;if(connection==null)return;
             if(connection.Connected)wasConnected=true;
             else if(wasConnected && !connection.Busy)
             {wasConnected=false;page=Page.Home;notice=connection.Status;}
             var keyboard=Keyboard.current;
-            if(!Application.isFocused || keyboard==null || connection.Busy || connection.Connected)return;
+            if(profileOpen)
+            {
+                if(!connection.Connected || CapOptions.IsOpen || (CapWarmTown.Instance!=null && CapWarmTown.Instance.InTown))CloseProfileEditor();
+                else if(Application.isFocused && keyboard!=null && keyboard.escapeKey.wasPressedThisFrame)CloseProfileEditor();
+                return;
+            }
+            if(CapOptions.IsOpen || !Application.isFocused || keyboard==null || connection.Busy || connection.Connected)return;
             if(keyboard.escapeKey.wasPressedThisFrame && page!=Page.Home)BackToHome();
             else if(page==Page.Join && (keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame))JoinFromMenu(code);
         }
 
         public void OpenJoin(){page=Page.Join;notice="";code="";joinAttempted=false;}
-        public void OpenOptions(){page=Page.Options;notice="";}
-        public void BackToHome(){SaveOptions();page=Page.Home;notice="";}
+        public void OpenProfileEditor(CapNetworkPlayer player)
+        {
+            if(player==null || !player.IsSpawned || !player.IsOwner || player.InTown.Value)return;
+            profileName=player.Nickname.Value.ToString();profileColor=player.ColorIndex.Value;
+            CapPlayerProfile.Status="";profileOpen=true;activeProfileEditor=this;
+        }
+        public void CloseProfileEditor(){profileOpen=false;if(activeProfileEditor==this)activeProfileEditor=null;}
+        private void DrawProfileEditor()
+        {
+            var local=NetworkManager.Singleton?.LocalClient?.PlayerObject?.GetComponent<CapNetworkPlayer>();
+            if(local==null || !local.IsSpawned || !local.IsOwner){CloseProfileEditor();return;}
+            Fill(new Rect(552,241,684,431),Panel);
+            Fill(new Rect(552,241,4,431),Accent);
+            GUI.Label(new Rect(580,259,610,45),"내 플레이어 변경",heading);
+            profileName=GUI.TextField(new Rect(580,321,628,48),profileName,12,new GUIStyle(field){fontSize=24,padding=new RectOffset(12,12,6,6)});
+            GUI.Label(new Rect(582,378,625,30),"이름 최대 12자 · 비워두면 P번호로 표시",muted);
+            for(int i=0;i<CapPlayerProfile.Colors.Length;i++)
+            {
+                var rect=new Rect(580+(i%4)*159,423+(i/4)*52,149,42);
+                bool enabled=GUI.enabled,available=local.CanUseColor(i);
+                GUI.enabled=enabled && available;
+                if(GUI.Button(rect,(profileColor==i?"● ":"")+CapPlayerProfile.ColorNames[i]+(!available?" · 사용 중":""),new GUIStyle(button){fontSize=17,padding=new RectOffset(27,4,0,0)}))profileColor=i;
+                Fill(new Rect(rect.x+8,rect.y+14,12,12),CapPlayerProfile.Colors[i]);
+                GUI.enabled=enabled;
+            }
+            GUI.Label(new Rect(582,536,625,51),string.IsNullOrEmpty(CapPlayerProfile.Status)?"다른 사람이 사용 중인 색상은 선택할 수 없습니다.":CapPlayerProfile.Status,muted);
+            if(GUI.Button(new Rect(580,601,304,45),"적용 / 저장",primary))local.ApplyProfile(profileName,profileColor);
+            if(GUI.Button(new Rect(904,601,304,45),"닫기 · Esc",button))CloseProfileEditor();
+        }
+        public void OpenOptions(){page=Page.Options;notice="";CapOptions.Instance?.Open(BackToHome);}
+        public void BackToHome(){SaveOptions();page=Page.Home;notice="";if(CapOptions.IsOpen)CapOptions.Instance.Close();}
         public void HostFromMenu()
         {
             var session=CapRelaySession.Instance;if(session==null||session.Busy)return;
@@ -60,8 +101,8 @@ namespace Cap.Multiplayer
         public void SetVolume(float value){volume=Mathf.Clamp01(value);AudioListener.volume=volume;}
         public void SaveOptions()
         {
-            PlayerPrefs.SetFloat(VolumeKey,volume);
-            if(!Application.isEditor)PlayerPrefs.SetInt(FullscreenKey,fullscreen?1:0);
+            PlayerPrefs.SetFloat(VolumeKey,AudioListener.volume);
+            if(!Application.isEditor)PlayerPrefs.SetInt(FullscreenKey,Screen.fullScreen?1:0);
             PlayerPrefs.Save();
         }
         public void ExitGame()
@@ -105,7 +146,8 @@ namespace Cap.Multiplayer
 
         private void OnGUI()
         {
-            if(CapWarmTown.Instance!=null&&CapWarmTown.Instance.InTown)return;
+            if(CapLoadingScreen.Blocking)return;
+            if(CapOptions.IsOpen || (CapWarmTown.Instance!=null&&CapWarmTown.Instance.InTown))return;
             var local=NetworkManager.Singleton?.LocalClient?.PlayerObject;
             if(local!=null&&local.GetComponent<CapNetworkPlayer>().InTown.Value)return;
             var connection=CapRelaySession.Instance;if(connection==null)return;
@@ -125,7 +167,7 @@ namespace Cap.Multiplayer
                     case Page.Home:DrawHome();break;
                     case Page.Create:DrawCreate(connection);break;
                     case Page.Join:DrawJoin(connection);break;
-                    case Page.Options:DrawOptions();break;
+                    case Page.Options:break; // CapOptions draws the shared settings panel.
                 }
             }
             finally{GUI.matrix=oldMatrix;GUI.color=oldColor;GUI.enabled=oldEnabled;}
@@ -183,22 +225,6 @@ namespace Cap.Multiplayer
             if(GUI.Button(new Rect(390,536,500,58),connection.Busy?"연결 중…":"참가하기",primary))JoinFromMenu(code);
             if(GUI.Button(new Rect(390,608,500,48),"뒤로",button))BackToHome();
         }
-        private void DrawOptions()
-        {
-            Card("옵션","돌아가면 변경한 설정이 저장됩니다.");
-            GUI.Label(new Rect(390,325,370,34),"전체 음량",body);
-            GUI.Label(new Rect(792,325,100,34),Mathf.RoundToInt(volume*100)+"%",center);
-            float next=GUI.HorizontalSlider(new Rect(392,381,493,28),volume,0,1);
-            if(Mathf.Abs(next-volume)>.001f)SetVolume(next);
-            GUI.Label(new Rect(390,438,265,34),"화면 모드",body);
-            GUI.enabled=!Application.isEditor;
-            if(GUI.Button(new Rect(665,428,225,52),fullscreen?"전체 화면":"창 모드",button))
-            {fullscreen=!fullscreen;Screen.fullScreenMode=fullscreen?FullScreenMode.FullScreenWindow:FullScreenMode.Windowed;}
-            GUI.enabled=true;
-            if(Application.isEditor)GUI.Label(new Rect(392,493,490,40),"화면 모드는 빌드한 게임에서 변경할 수 있습니다.",small);
-            GUI.Label(new Rect(392,542,490,50),"WASD / 방향키 이동 · M 지도 · Esc 지도 닫기",small);
-            if(GUI.Button(new Rect(390,608,500,48),"저장하고 돌아가기",primary))BackToHome();
-        }
         private void DrawLobby(CapRelaySession connection)
         {
             Fill(new Rect(36,40,490,702),Panel);
@@ -213,16 +239,39 @@ namespace Cap.Multiplayer
             for(int i=0;i<4;i++)
             {
                 float y=345+i*47;Fill(new Rect(70,y,420,39),new Color(.12f,.16f,.21f));
-                if(i<players.Length)
-                {var p=players[i];Fill(new Rect(83,y+10,18,18),CapWarmTown.PlayerColor(p.OwnerClientId));GUI.Label(new Rect(116,y+4,350,32),"P"+(p.OwnerClientId%4+1)+(p.IsOwner?" · 나":""),body);}
+                var p=System.Array.Find(players,player=>player.IsSpawned && player.PlayerSlot.Value==i);
+                if(p!=null)
+                {
+                    if(p.IsOwner && GUI.Button(new Rect(70,y,420,39),GUIContent.none,button))
+                    {if(profileOpen)CloseProfileEditor();else OpenProfileEditor(p);}
+                    Fill(new Rect(83,y+10,18,18),CapWarmTown.PlayerColor(p.ColorIndex.Value));
+                    GUI.Label(new Rect(116,y+4,205,32),new GUIContent(p.PlayerLabel+(p.IsOwner?" · 나":""),p.PlayerLabel),new GUIStyle(body){wordWrap=false,clipping=TextClipping.Clip});
+                    GUI.Label(new Rect(332,y+9,95,25),p.ReadyToStart.Value?"준비 완료":"준비 중",new GUIStyle(small){normal={textColor=p.ReadyToStart.Value?new Color(.45f,.9f,.6f):new Color(.60f,.69f,.77f)}});
+                    if(p.IsOwner)GUI.Label(new Rect(432,y+9,50,25),"변경 ▸",small);
+                }
                 else GUI.Label(new Rect(116,y+4,350,32),"참가 대기 중",muted);
             }
-            GUI.enabled=!connection.Busy&&host&&CapWarmTown.CanStart;
-            if(GUI.Button(new Rect(70,553,420,58),host?"게임 시작":"방장의 시작을 기다리는 중",primary))CapWarmTown.StartForAll(true);
+            var mine=System.Array.Find(players,p=>p.IsSpawned&&p.IsOwner);
+            var leader=CapNetworkPlayer.LobbyHost;
+            if(leader!=null && leader.StartAt.Value>=0)
+            {
+                int seconds=Mathf.Max(1,Mathf.CeilToInt((float)(leader.StartAt.Value-NetworkManager.Singleton.ServerTime.Time)));
+                GUI.Label(new Rect(72,526,418,26),$"전원 준비 완료 · {seconds}초 후 시작",small);
+            }
+            GUI.enabled=!connection.Busy&&mine!=null&&!profileOpen&&!CapLoadingScreen.Blocking;
+            if(GUI.Button(new Rect(70,553,host?202:420,58),mine!=null&&mine.ReadyToStart.Value?"준비 취소":"준비 완료",primary))mine.SetReady(!mine.ReadyToStart.Value);
+            if(host)
+            {
+                GUI.enabled=GUI.enabled && mine!=null && mine.CanStartFromLobby;
+                if(GUI.Button(new Rect(288,553,202,58),leader!=null&&leader.StartAt.Value>=0?"시작 대기":"게임 시작",primary))mine.StartReadyCountdown();
+            }
             GUI.enabled=!connection.Busy;
             if(GUI.Button(new Rect(70,627,420,48),"방 나가기",button))connection.LeaveRoom();
-            GUI.Label(new Rect(72,697,418,30),"혼자 시작하거나 친구가 들어오기를 기다릴 수 있어요.",small);
+            GUI.Label(new Rect(72,697,418,30),"전원 준비 후 방장이 시작하면 3초 뒤 이동합니다.",small);
+            if(profileOpen)DrawProfileEditor();
         }
-        private void OnDestroy(){if(font!=null)Destroy(font);foreach(var texture in textures)if(texture!=null)Destroy(texture);}
+        private void OnDisable(){CloseProfileEditor();}
+        private void OnDestroy(){CloseProfileEditor();if(font!=null)Destroy(font);foreach(var texture in textures)if(texture!=null)Destroy(texture);}
     }
 }
+

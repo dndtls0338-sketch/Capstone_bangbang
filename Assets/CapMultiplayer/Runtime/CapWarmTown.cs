@@ -33,7 +33,7 @@ namespace Cap.Multiplayer
         [Serializable] public class Region { public string key, sheet; public int x,y,w,h; }
         [Serializable] public class Catalog { public Region[] items; }
 
-        public static Vector3 Spawn(int slot) => MapWorld(1120 + slot * 14, 366);
+        public static Vector3 Spawn(int slot) => MapWorld(1120 + slot * 22, 366);
         public static int Depth(float footY) => Mathf.RoundToInt(-footY * 100);
         public static bool CanStart => NetworkManager.Singleton != null && NetworkManager.Singleton.IsHost && NetworkManager.Singleton.LocalClient?.PlayerObject != null;
 
@@ -52,6 +52,7 @@ namespace Cap.Multiplayer
             ArtMaterial=new Material(Resources.Load<Shader>("WarmTown/CapPixelSprite"));
             root=new GameObject("Shape Town - geometry prototype");
             Build();
+            BuildMeetingRoom();
             root.SetActive(false);
             Debug.Log($"[CAP-TOWN] Built {root.transform.childCount} modular objects; {Obstacles.Count} footprints.");
         }
@@ -76,13 +77,16 @@ namespace Cap.Multiplayer
                 InTown=desired; root.SetActive(desired); Overview=false;
                 foreach(var ui in lobbyUIs) if(ui!=null) ui.enabled=!desired;
                 foreach(var go in lobbyObjects) if(go != null) go.SetActive(!desired);
-                if(view != null) { view.rect=new Rect(0,0,1,1); view.transform.position=desired ? Spawn((int)(player.OwnerClientId%4))+new Vector3(0,2,-10):lobbyCamera; view.orthographicSize=desired?cameraZoom:lobbyZoom; }
+                if(view != null) { view.rect=new Rect(0,0,1,1); view.transform.position=desired ? Spawn(player.PlayerSlot.Value)+new Vector3(0,2,-10):lobbyCamera; view.orthographicSize=desired?cameraZoom:lobbyZoom; }
                 Debug.Log("[CAP-TOWN] Local phase="+(desired?"town":"lobby"));
             }
+            bool inside=desired && player.InMeetingRoom.Value;
+            root.SetActive(desired && !inside);meetingRoot.SetActive(inside);
+            if(inside && Overview)SetMapOpen(false);
             if(!InTown || view==null || player==null) return;
             var keyboard=Keyboard.current;
-            if(Application.isFocused && keyboard!=null) {
-                if(keyboard.mKey.wasPressedThisFrame)SetMapOpen(!Overview);
+            if(Application.isFocused && keyboard!=null && !CapControls.Blocked) {
+                if(CapControls.Pressed(CapAction.Map))SetMapOpen(!Overview);
                 else if(Overview && keyboard.escapeKey.wasPressedThisFrame)SetMapOpen(false);
             }
             // Fixed reference framing; scroll wheel cannot silently change asset scale.
@@ -141,30 +145,32 @@ namespace Cap.Multiplayer
 
         private void OnGUI()
         {
-            if(!InTown) return;
+            if(!InTown || CapOptions.IsOpen || CapLoadingScreen.Blocking) return;
 
             if(label==null) { font=Font.CreateDynamicFontFromOSFont(new[]{"Malgun Gothic","Arial"},18); label=new GUIStyle(GUI.skin.label){font=font,fontSize=18}; }
             if(Overview){DrawMapOverlay();return;}
             float s=Mathf.Clamp(Screen.width/1400f,.6f,1.4f); var old=GUI.matrix; GUI.matrix=Matrix4x4.Scale(Vector3.one*s);
             GUI.Box(new Rect(16,16,440,64),GUIContent.none);
-            GUI.Label(new Rect(30,22,420,28),"대학생 탐정단 / 도형 테스트 마을",label);
-            GUI.Label(new Rect(30,49,420,28),"WASD 이동 · B 자전거 · M 지도",new GUIStyle(label){fontSize=14});
+            GUI.Label(new Rect(30,22,420,28),(IsMeetingRoom ? "학생회관 / 탐정 동아리 회의실" : "대학생 탐정단 / 도형 테스트 마을"),label);
+            GUI.Label(new Rect(30,49,420,28),$"{CapControls.Label(CapAction.Up)}/{CapControls.Label(CapAction.Left)}/{CapControls.Label(CapAction.Down)}/{CapControls.Label(CapAction.Right)} 이동 · {CapControls.Label(CapAction.Interact)} 문 열기"+(IsMeetingRoom?"":$" · {CapControls.Label(CapAction.Map)} 지도"),new GUIStyle(label){fontSize=14});
             var local=NetworkManager.Singleton.LocalClient?.PlayerObject;
             if(local!=null)
             {
                 var rider=local.GetComponent<CapNetworkPlayer>();
-                if(GUI.Button(new Rect(16,116,180,36),rider.Riding.Value?"B · 자전거 내리기":"B · 자전거 타기")) rider.ToggleBicycle();
+                if(!IsMeetingRoom && GUI.Button(new Rect(16,116,180,36),CapControls.Label(CapAction.Bicycle)+(rider.Riding.Value?" · 자전거 내리기":" · 자전거 타기"))) rider.ToggleBicycle();
             }
             if(local!=null && local.GetComponent<CapNetworkPlayer>().Riding.Value)
-                GUI.Label(new Rect(30,82,350,28),"자전거 주행 중 · 속도 ×1.8 · B 내리기",label);
+                GUI.Label(new Rect(30,82,350,28),$"자전거 주행 중 · 속도 ×1.8 · {CapControls.Label(CapAction.Bicycle)} 내리기",label);
             if(NetworkManager.Singleton.IsHost && GUI.Button(new Rect(Screen.width/s-160,20,140,36),"대기실로 돌아가기")) StartForAll(false);
             GUI.matrix=old;
+            DrawMeetingDoorHint();
         }
 
         private void OnDestroy()
         {
             if(Instance==this) Instance=null;
             if(root!=null) Destroy(root);
+            if(meetingRoot!=null) Destroy(meetingRoot);
             foreach(var sprite in sprites.Values) if(sprite!=null) Destroy(sprite);
             if(white!=null) Destroy(white);
             foreach(var s in groundSprites) if(s!=null) Destroy(s);
@@ -176,3 +182,4 @@ namespace Cap.Multiplayer
         }
     }
 }
+

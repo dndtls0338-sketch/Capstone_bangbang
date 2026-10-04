@@ -10,17 +10,17 @@ namespace Cap.Multiplayer
     {
         private Texture2D mapImage,mapDot;
         public Texture2D MapImage => mapImage;
-        public static Color PlayerColor(ulong id)
+        public static Color PlayerColor(int slot)
         {
-            Color[] colors={new Color(1,.65f,.28f),new Color(.3f,.7f,1),new Color(.45f,.9f,.6f),new Color(.95f,.45f,.7f)};
-            return colors[(int)(id%4)];
+            return CapPlayerProfile.GetColor(slot);
         }
 
         public void SetMapOpen(bool open)
         {
+            if(open && CapLoadingScreen.Blocking)return;
             var obj=NetworkManager.Singleton?.LocalClient?.PlayerObject;
             var player=obj!=null?obj.GetComponent<CapNetworkPlayer>():null;
-            open=open && InTown && player!=null && player.IsSpawned;
+            open=open && InTown && player!=null && player.IsSpawned && !player.InMeetingRoom.Value;
             if(open && mapImage==null)CreateMapImage();
             Overview=open;
             if(player!=null)player.SetMapViewing(open);
@@ -63,7 +63,7 @@ namespace Cap.Multiplayer
 
         public static Vector2 MapIconPosition(CapNetworkPlayer player,Rect mapRect)
         {
-            var position=player.RenderPosition;
+            var position=player.InMeetingRoom.Value && Instance!=null ? Instance.StudentDoor : player.RenderPosition;
             float x=Mathf.InverseLerp(Bounds.xMin,Bounds.xMax,position.x-OffsetX);
             float y=1-Mathf.InverseLerp(Bounds.yMin,Bounds.yMax,position.y);
             return new Vector2(mapRect.x+x*mapRect.width,mapRect.y+y*mapRect.height);
@@ -83,7 +83,7 @@ namespace Cap.Multiplayer
                 var hint=new GUIStyle(label){fontSize=Mathf.RoundToInt(16*scale)};
                 float margin=24*scale,top=76*scale,bottom=40*scale;
                 GUI.Label(new Rect(margin,14*scale,Screen.width-180*scale,40*scale),"마을 지도",heading);
-                if(GUI.Button(new Rect(Screen.width-margin-150*scale,16*scale,150*scale,36*scale),"닫기 · M / ESC",new GUIStyle(GUI.skin.button){font=font,fontSize=Mathf.RoundToInt(16*scale)}))SetMapOpen(false);
+                if(GUI.Button(new Rect(Screen.width-margin-150*scale,16*scale,150*scale,36*scale),$"닫기 · {CapControls.Label(CapAction.Map)} / ESC",new GUIStyle(GUI.skin.button){font=font,fontSize=Mathf.RoundToInt(16*scale)}))SetMapOpen(false);
                 var available=new Rect(margin,top,Screen.width-margin*2,Screen.height-top-bottom);
                 float fit=Mathf.Min(available.width/1536,available.height/1024);
                 var area=new Rect(available.center.x-1536*fit/2,available.center.y-1024*fit/2,1536*fit,1024*fit);
@@ -109,16 +109,16 @@ namespace Cap.Multiplayer
 
         private void DrawMapMarker(CapNetworkPlayer player,Rect area,float scale)
         {
-            if(!player.IsSpawned||!player.InTown.Value)return;
+            if(!player.IsSpawned||!player.InTown.Value||player.PlayerSlot.Value<0)return;
             var p=MapIconPosition(player,area);float diameter=(player.IsOwner?22:16)*scale;
             GUI.color=player.IsOwner?Color.white:new Color(.07f,.10f,.14f);
             GUI.DrawTexture(new Rect(p.x-diameter/2-3*scale,p.y-diameter/2-3*scale,diameter+6*scale,diameter+6*scale),mapDot);
-            GUI.color=PlayerColor(player.OwnerClientId);
+            GUI.color=PlayerColor(player.ColorIndex.Value);
             GUI.DrawTexture(new Rect(p.x-diameter/2,p.y-diameter/2,diameter,diameter),mapDot);
             GUI.color=Color.white;
             var textStyle=new GUIStyle(label){fontSize=Mathf.RoundToInt(15*scale),fontStyle=FontStyle.Bold};
-            string name="P"+(player.OwnerClientId%4+1)+(player.IsOwner?" · 나":"");
-            float width=82*scale;
+            string name=player.PlayerLabel+(player.IsOwner?" · 나":"")+(player.InMeetingRoom.Value?" · 회의실":"");
+            float width=Mathf.Max(82*scale,textStyle.CalcSize(new GUIContent(name)).x+8*scale);
             var textRect=new Rect(Mathf.Clamp(p.x+diameter/2+5*scale,area.x,area.xMax-width),Mathf.Clamp(p.y-13*scale,area.y,area.yMax-26*scale),width,26*scale);
             GUI.color=new Color(.07f,.10f,.14f,.9f);GUI.DrawTexture(textRect,Texture2D.whiteTexture);GUI.color=Color.white;
             GUI.Label(textRect,name,textStyle);

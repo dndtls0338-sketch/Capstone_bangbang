@@ -15,6 +15,7 @@ namespace Cap.Multiplayer
         public bool Busy { get; private set; }
         public string Status { get; private set; } = "방을 만들거나 참가 코드를 입력하세요.";
         public string JoinCode => session?.Code ?? "";
+        public string VoiceRoom => session==null ? "" : "cap_"+session.Id;
         public bool Connected => NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient;
         public bool CloudLinked => !string.IsNullOrWhiteSpace(Application.cloudProjectId) &&
             Application.cloudProjectId != "00000000-0000-0000-0000-000000000000";
@@ -27,6 +28,13 @@ namespace Cap.Multiplayer
             Application.runInBackground = true;
         }
 
+        private Task authenticationTask;
+        // Device options and room connection share one initialization/sign-in operation.
+        public Task EnsureServicesAsync()
+        {
+            if(authenticationTask==null || authenticationTask.IsCompleted)authenticationTask=AuthenticateAsync();
+            return authenticationTask;
+        }
         private async Task AuthenticateAsync()
         {
             if (!CloudLinked)
@@ -46,10 +54,11 @@ namespace Cap.Multiplayer
         {
             if (Busy || Connected || session != null) return;
             Busy = true;
+            CapLoadingScreen.Show("방을 만드는 중");
             Status = "Relay 방을 만드는 중...";
             try
             {
-                await AuthenticateAsync();
+                await EnsureServicesAsync();
                 session = await MultiplayerService.Instance.CreateSessionAsync(
                     new SessionOptions { Name = "cap", MaxPlayers = 4, IsPrivate = true }.WithRelayNetwork());
                 Status = "방이 생성되었습니다. 참가 코드를 친구에게 전달하세요.";
@@ -64,10 +73,11 @@ namespace Cap.Multiplayer
             code = (code ?? "").Trim().ToUpperInvariant();
             if (code.Length == 0) { Status = "참가 코드를 입력하세요."; return; }
             Busy = true;
+            CapLoadingScreen.Show("방에 참가하는 중");
             Status = "방에 연결하는 중...";
             try
             {
-                await AuthenticateAsync();
+                await EnsureServicesAsync();
                 session = await MultiplayerService.Instance.JoinSessionByCodeAsync(code);
                 Status = "접속했습니다. WASD 또는 방향키로 이동하세요.";
             }
@@ -107,6 +117,7 @@ namespace Cap.Multiplayer
         {
             if (Busy) return;
             Busy = true;
+            CapLoadingScreen.Show("시작 화면으로 이동 중");
             Status = "연결을 종료하는 중...";
             try { await CleanupAsync(); Status = "연결을 종료했습니다."; }
             finally { Busy = false; }

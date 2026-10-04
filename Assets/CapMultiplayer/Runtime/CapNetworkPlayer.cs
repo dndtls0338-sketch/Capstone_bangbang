@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,11 +7,17 @@ namespace Cap.Multiplayer
 {
     // Server-authoritative movement with shared town footprint collision.
     [DefaultExecutionOrder(100)]
-    public sealed class CapNetworkPlayer : NetworkBehaviour
+    public sealed partial class CapNetworkPlayer : NetworkBehaviour
     {
         [SerializeField] private float speed = 3.5f;
         public static Vector2? TestInput; // Development test input; null during normal play.
         private bool mapRequested;
+        // Client IDs keep increasing on reconnect. Display slots are separate, host-assigned seats.
+        public readonly NetworkVariable<int> PlayerSlot = new NetworkVariable<int>(-1);
+        public readonly NetworkVariable<int> ColorIndex = new NetworkVariable<int>(-1);
+        public readonly NetworkVariable<FixedString64Bytes> Nickname = new NetworkVariable<FixedString64Bytes>(default);
+        public string PlayerLabel => PlayerSlot.Value < 0 ? "연결 중" : Nickname.Value.Length==0 ? "P"+(PlayerSlot.Value+1) : Nickname.Value+" · P"+(PlayerSlot.Value+1);
+        public readonly NetworkVariable<FixedString64Bytes> VoicePlayerId=new NetworkVariable<FixedString64Bytes>(default,NetworkVariableReadPermission.Everyone,NetworkVariableWritePermission.Owner);
         public readonly NetworkVariable<bool> ViewingMap=new NetworkVariable<bool>(false);
         private Vector2 serverInput;
         private float lastInputTime;
@@ -24,6 +31,10 @@ namespace Cap.Multiplayer
         private float nextLog;
         private bool smokeMove;
         private bool smokeTest;
+        public readonly NetworkVariable<bool> InMeetingRoom = new NetworkVariable<bool>(false);
+        private float nextDoorTime;
+        private float movementResumeTime;
+        public bool SameSpace(CapNetworkPlayer other) => other!=null && InTown.Value==other.InTown.Value && InMeetingRoom.Value==other.InMeetingRoom.Value;
         public readonly NetworkVariable<bool> InTown = new NetworkVariable<bool>(false);
         // Low 3 bits: E,NE,N,NW,W,SW,S,SE. Bit 3: actual movement.
         public readonly NetworkVariable<byte> Locomotion = new NetworkVariable<byte>(6);
@@ -31,43 +42,48 @@ namespace Cap.Multiplayer
 
         public void SetTown(bool value)
         {
-            if (!IsServer || !IsSpawned) return;
-            InTown.Value = value;
-            ViewingMap.Value=false;
-            serverInput = Vector2.zero;
-            Riding.Value=false;
-            Locomotion.Value=6;
-            int slot = (int)(OwnerClientId % 4);
-            Vector3 p = value ? CapWarmTown.Spawn(slot) : new Vector3(-3 + slot * 2, -1, 0);
-            GetComponent<Unity.Netcode.Components.NetworkTransform>().Teleport(p, transform.rotation, transform.localScale);
+            if (!IsServer || !IsSpawned || PlayerSlot.Value<0) return;
+            Vector3 preferred=value ? CapWarmTown.Spawn(PlayerSlot.Value) : new Vector3(-3+PlayerSlot.Value*2,-1,0);
+            if(!TryFreePosition(preferred,value,false,out var p))return;
+            movementResumeTime=Time.unscaledTime+CapLoadingScreen.MinimumVisibleSeconds+CapLoadingScreen.FadeSeconds;
+            InTown.Value=value;InMeetingRoom.Value=false;ViewingMap.Value=false;
+            ReadyToStart.Value=false;StartAt.Value=-1;
+            serverInput=Vector2.zero;Riding.Value=false;Locomotion.Value=6;
+            GetComponent<Unity.Netcode.Components.NetworkTransform>().Teleport(p,transform.rotation,transform.localScale);
             previousStep=currentStep=p;
         }
-
         public override void OnNetworkSpawn()
         {
-            int slot = (int)(OwnerClientId % 4);
-            Color[] colors = { new Color(1f,.65f,.28f), new Color(.3f,.7f,1f),
-                new Color(.45f,.9f,.6f), new Color(.95f,.45f,.7f) };
-            GetComponent<SpriteRenderer>().color = colors[slot];
-            if (IsServer) transform.position = new Vector3(-3f + slot * 2f, -1f, 0f);
-            previousStep=currentStep=transform.position;
-            var art = CapWarmTown.Instance != null ? CapWarmTown.Instance.PlayerSprite(slot) : null;
-            if (art != null)
+            if(IsServer)
             {
-                GetComponent<SpriteRenderer>().enabled = false;
-                var child = new GameObject("Player art");
-                child.transform.SetParent(transform, false);
-                visual = child.AddComponent<SpriteRenderer>(); visual.sprite = art;
-                visual.sharedMaterial=CapWarmTown.Instance.ArtMaterial;
-                // Counter the original prefab's non-uniform rectangle scale.
-                float target = CapWarmTown.ReferencePlayerHeight / art.bounds.size.y;
-                child.transform.localScale = new Vector3(target * .67f / transform.localScale.x, target / transform.localScale.y, 1);
-                visual.color = colors[slot];
+                int taken=0;
+                foreach(var other in FindObjectsByType<CapNetworkPlayer>(FindObjectsSortMode.None))
+                    if(other!=this && other.IsSpawned && other.NetworkManager==NetworkManager && other.PlayerSlot.Value>=0)
+                        taken |= 1 << other.PlayerSlot.Value;
+                int available=-1;
+                for(int i=0;i<4;i++)if((taken & (1<<i))==0){available=i;break;}
+                if(available<0)
+                {
+                    Debug.LogWarning("[CAP] No player seat available; connection rejected.");
+                    NetworkManager.DisconnectClient(OwnerClientId);
+                    return;
+                }
+                PlayerSlot.Value=available;
+                for(int i=0;i<CapPlayerProfile.Colors.Length;i++)if(CanUseColor(i)){ColorIndex.Value=i;break;}
+                var lobbySpawn=new Vector3(-3f+available*2f,-1f,0f);
+                if(TryFreePosition(lobbySpawn,false,false,out var freeSpawn))lobbySpawn=freeSpawn;
+                transform.position=lobbySpawn;
             }
+            PlayerSlot.OnValueChanged+=OnSlotChanged;
+            ColorIndex.OnValueChanged+=OnSlotChanged;
+            ApplySlotVisual();
+            previousStep=currentStep=transform.position;
+            if(IsOwner && !CapPlayerProfile.Verification && (CapPlayerProfile.SavedName.Length>0 || CapPlayerProfile.SavedColor>=0))
+                RequestProfileRpc(new FixedString64Bytes(CapPlayerProfile.SavedName),CapPlayerProfile.SavedColor,true);
             if (IsServer)
                 foreach (var other in FindObjectsByType<CapNetworkPlayer>(FindObjectsSortMode.None))
                     if (other != this && other.IsSpawned && other.InTown.Value) { SetTown(true); break; }
-            Debug.Log($"[CAP] Player spawned owner={OwnerClientId} local={IsOwner} server={IsServer}");
+            Debug.Log($"[CAP] Player spawned owner={OwnerClientId} slot={PlayerSlot.Value} local={IsOwner} server={IsServer}");
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             var args = System.Environment.GetCommandLineArgs();
             smokeMove = System.Array.IndexOf(args, "--cap-test-move") >= 0;
@@ -75,9 +91,79 @@ namespace Cap.Multiplayer
 #endif
         }
 
+        public override void OnNetworkDespawn()
+        {
+            PlayerSlot.OnValueChanged-=OnSlotChanged;
+            ColorIndex.OnValueChanged-=OnSlotChanged;
+            // The seat becomes free because the server only counts spawned players.
+            if(visual!=null){Destroy(visual.gameObject);visual=null;}
+            base.OnNetworkDespawn();
+        }
+        private void OnSlotChanged(int previous,int current){ApplySlotVisual();}
+        private void ApplySlotVisual()
+        {
+            int slot=PlayerSlot.Value;
+            var rootRenderer=GetComponent<SpriteRenderer>();
+            if(slot<0 || slot>=4 || ColorIndex.Value<0){rootRenderer.enabled=false;return;}
+            var color=CapPlayerProfile.GetColor(ColorIndex.Value);
+            rootRenderer.color=color;rootRenderer.enabled=visual==null;
+            var art = CapWarmTown.Instance != null ? CapWarmTown.Instance.PlayerSprite(slot) : null;
+            if (art != null)
+            {
+                rootRenderer.enabled = false;
+                if(visual==null)
+                {
+                    var child = new GameObject("Player art");
+                    child.transform.SetParent(transform, false);
+                    visual = child.AddComponent<SpriteRenderer>();
+                }
+                visual.sprite = art;
+                visual.sharedMaterial=CapWarmTown.Instance.ArtMaterial;
+                // Counter the original prefab's non-uniform rectangle scale.
+                float target = CapWarmTown.ReferencePlayerHeight / art.bounds.size.y;
+                visual.transform.localScale = new Vector3(target * .67f / transform.localScale.x, target / transform.localScale.y, 1);
+                visual.color = color;
+            }
+        }
+
+        public bool CanUseColor(int color)
+        {
+            if(color<0 || color>=CapPlayerProfile.Colors.Length)return false;
+            foreach(var other in FindObjectsByType<CapNetworkPlayer>(FindObjectsSortMode.None))
+                if(other!=this && other.IsSpawned && other.NetworkManager==NetworkManager && other.ColorIndex.Value==color)return false;
+            return true;
+        }
+        public void ApplyProfile(string name,int color)
+        {
+            if(!IsOwner || !IsSpawned)return;
+            CapPlayerProfile.Status="프로필 적용 중…";
+            RequestProfileRpc(new FixedString64Bytes(CapPlayerProfile.CleanName(name)),color,false);
+        }
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
+        private void RequestProfileRpc(FixedString64Bytes name,int color,bool joining)
+        {
+            // The host arbitrates simultaneous requests so two players cannot claim one color.
+            if(!CanUseColor(color))
+            {
+                if(!joining){ProfileResultRpc(false,Nickname.Value,ColorIndex.Value);return;}
+                Nickname.Value=new FixedString64Bytes(CapPlayerProfile.CleanName(name.ToString()));
+                return; // Saved color already occupied: keep the automatic free color.
+            }
+            Nickname.Value=new FixedString64Bytes(CapPlayerProfile.CleanName(name.ToString()));
+            ColorIndex.Value=color;
+            if(!joining)ProfileResultRpc(true,Nickname.Value,color);
+        }
+        [Rpc(SendTo.Owner)]
+        private void ProfileResultRpc(bool success,FixedString64Bytes name,int color)
+        {
+            if(success){if(!CapPlayerProfile.Verification)CapPlayerProfile.Save(name.ToString(),color);CapPlayerProfile.Status="이름과 색상을 저장했습니다.";}
+            else CapPlayerProfile.Status="다른 플레이어가 선택한 색상입니다. 다른 색상을 골라 주세요.";
+        }
+
         private void Update()
         {
             if (!IsSpawned) return;
+            TickLobbyReady();
             if(!InTown.Value)mapRequested=false;
             if (IsOwner)
             {
@@ -85,15 +171,13 @@ namespace Cap.Multiplayer
                 var k = Keyboard.current;
                 if (Application.isFocused && k != null)
                 {
-                    if(k.bKey.wasPressedThisFrame) ToggleBicycle();
-                    input.x = ((k.dKey.isPressed || k.rightArrowKey.isPressed) ? 1 : 0)
-                            - ((k.aKey.isPressed || k.leftArrowKey.isPressed) ? 1 : 0);
-                    input.y = ((k.wKey.isPressed || k.upArrowKey.isPressed) ? 1 : 0)
-                            - ((k.sKey.isPressed || k.downArrowKey.isPressed) ? 1 : 0);
+                    if(CapControls.Pressed(CapAction.Bicycle)) ToggleBicycle();
+                    if(CapControls.Pressed(CapAction.Interact)) InteractDoor();
+                    input=CapControls.Movement();
                 }
                 if (smokeMove) input = new Vector2(Mathf.Sin(Time.unscaledTime), Mathf.Cos(Time.unscaledTime));
                 if (TestInput.HasValue) input=TestInput.Value;
-                if(mapRequested || ViewingMap.Value || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))input=Vector2.zero;
+                if(CapControls.Blocked || mapRequested || ViewingMap.Value || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))input=Vector2.zero;
                 input=Vector2.ClampMagnitude(input,1);
                 if(input!=sentInput || Time.unscaledTime>=nextSend)
                 {
@@ -111,24 +195,45 @@ namespace Cap.Multiplayer
         // The owner requests map mode; the host enforces the movement lock.
         public void SetMapViewing(bool open) {
             if(!IsSpawned || !IsOwner)return;
-            mapRequested=open && InTown.Value;sentInput=Vector2.zero;nextSend=0;
+            mapRequested=open && InTown.Value && !InMeetingRoom.Value;sentInput=Vector2.zero;nextSend=0;
             SetMapViewingRpc(mapRequested);
         }
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
         private void SetMapViewingRpc(bool open) {
-            ViewingMap.Value=open && InTown.Value;
+            ViewingMap.Value=open && InTown.Value && !InMeetingRoom.Value;
             serverInput=Vector2.zero;Locomotion.Value=(byte)(Locomotion.Value&7);
             lastInputTime=Time.unscaledTime;
         }
 
+        public void InteractDoor()
+        {
+            if(IsSpawned && IsOwner && !CapControls.Blocked && !mapRequested && !ViewingMap.Value) InteractDoorRpc();
+        }
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
+        private void InteractDoorRpc()
+        {
+            var town=CapWarmTown.Instance;
+            if(Time.unscaledTime<movementResumeTime || !InTown.Value || ViewingMap.Value || town==null || Time.unscaledTime<nextDoorTime || !town.NearMeetingDoor(this))return;
+            nextDoorTime=Time.unscaledTime+.6f;
+            bool entering=!InMeetingRoom.Value;
+            Vector3 preferred=entering ? CapWarmTown.MeetingSpawn : town.StudentDoor+Vector3.down*.6f;
+            if(!TryFreePosition(preferred,true,entering,out var destination))return;
+            movementResumeTime=Time.unscaledTime+CapLoadingScreen.MinimumVisibleSeconds+CapLoadingScreen.FadeSeconds;
+            InMeetingRoom.Value=entering;ViewingMap.Value=false;Riding.Value=false;
+            serverInput=Vector2.zero;Locomotion.Value=6;lastInputTime=Time.unscaledTime;
+
+            GetComponent<Unity.Netcode.Components.NetworkTransform>().Teleport(destination,transform.rotation,transform.localScale);
+            previousStep=currentStep=destination;
+        }
+
         public void ToggleBicycle()
         {
-            if(IsSpawned && IsOwner && InTown.Value && !mapRequested && !ViewingMap.Value) ToggleBicycleRpc();
+            if(IsSpawned && IsOwner && !CapControls.Blocked && InTown.Value && !mapRequested && !ViewingMap.Value) ToggleBicycleRpc();
         }
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
         private void ToggleBicycleRpc()
         {
-            if(!InTown.Value || ViewingMap.Value || Time.unscaledTime<nextBikeToggle) return;
+            if(Time.unscaledTime<movementResumeTime || !InTown.Value || InMeetingRoom.Value || ViewingMap.Value || Time.unscaledTime<nextBikeToggle) return;
             nextBikeToggle=Time.unscaledTime+.3f;
             Riding.Value=!Riding.Value;
         }
@@ -137,7 +242,7 @@ namespace Cap.Multiplayer
         private void SubmitInputRpc(Vector2 input)
         {
             if (float.IsNaN(input.x) || float.IsNaN(input.y) || float.IsInfinity(input.x) || float.IsInfinity(input.y)) return;
-            serverInput = ViewingMap.Value ? Vector2.zero : Vector2.ClampMagnitude(input, 1);
+            serverInput = ViewingMap.Value || Time.unscaledTime<movementResumeTime ? Vector2.zero : Vector2.ClampMagnitude(input, 1);
             lastInputTime = Time.unscaledTime;
         }
 
@@ -147,19 +252,9 @@ namespace Cap.Multiplayer
             previousStep=currentStep;
             // NetworkTransform teleports (including development tools) must not interpolate across the map.
             if((transform.position-currentStep).sqrMagnitude>.01f) previousStep=transform.position;
-            if (ViewingMap.Value || Time.unscaledTime - lastInputTime > .25f) serverInput = Vector2.zero;
-            if (InTown.Value && CapWarmTown.Instance != null)
-            {
-                var next=CapWarmTown.Instance.Move(transform.position, serverInput * (Riding.Value?9:5) * Time.fixedDeltaTime);
-                UpdateLocomotion(next-transform.position);
-                transform.position = next;
-                currentStep=next;
-                return;
-            }
-            var p = transform.position + (Vector3)(serverInput * speed * Time.fixedDeltaTime);
-            p.x = Mathf.Clamp(p.x, -7.2f, 7.2f);
-            p.y = Mathf.Clamp(p.y, -3.8f, 2.4f);
-            p.z = 0;
+            if (ViewingMap.Value || Time.unscaledTime<movementResumeTime || Time.unscaledTime - lastInputTime > .25f) serverInput = Vector2.zero;
+            float movementSpeed=InTown.Value ? (Riding.Value?9:5) : speed;
+            var p=MoveWithPlayers(transform.position,serverInput*movementSpeed*Time.fixedDeltaTime);
             UpdateLocomotion(p-transform.position);
             transform.position = p;
             currentStep=p;
@@ -181,6 +276,8 @@ namespace Cap.Multiplayer
                 // Clients already receive interpolated NetworkTransform poses. Only the server needs render interpolation.
                 visual.transform.position=IsServer ? Vector3.Lerp(previousStep,currentStep,Mathf.Clamp01((Time.time-Time.fixedTime)/Time.fixedDeltaTime)) : transform.position;
             }
+            var local=NetworkManager.LocalClient?.PlayerObject?.GetComponent<CapNetworkPlayer>();
+            sr.enabled=local!=null && SameSpace(local);
             sr.sortingOrder = InTown.Value ? CapWarmTown.Depth(RenderPosition.y) : 10;
         }
     }

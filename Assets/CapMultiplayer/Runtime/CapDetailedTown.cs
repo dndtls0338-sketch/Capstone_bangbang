@@ -56,6 +56,7 @@ namespace Cap.Multiplayer {
     ShapeRect(b.name+" "+index++,r[0],r[1],r[2],r[3],c,-2000,true);
     ShapeRect("Door marker",r[0]+r[2]/2-22,r[1]+r[3]-8,44,8,new Color(1,.86f,.48f),-1990);
     ShapeLabel(b.name,r[0]+r[2]/2,r[1]+r[3]/2);
+    if(b.kind=="student-union")StudentDoor=PixelWorld(r[0]+r[2]/2,r[1]+r[3]+45);
    }
    foreach(var t in plan.trees)ShapeRect("Tree block "+index++,t.x-24,t.y-48,48,48,new Color(.25f,.47f,.34f),-2000,true);
    ShapeLabel("공원",3590,2780);ShapeLabel("캠퍼스 중앙 마당",3975,1140);
