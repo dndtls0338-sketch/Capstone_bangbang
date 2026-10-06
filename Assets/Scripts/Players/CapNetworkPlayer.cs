@@ -45,6 +45,9 @@ namespace Cap.Multiplayer
             if (!IsServer || !IsSpawned || PlayerSlot.Value<0) return;
             Vector3 preferred=value ? CapWarmTown.MeetingCenter+new Vector3(-3+PlayerSlot.Value*2,-4,0) : new Vector3(-3+PlayerSlot.Value*2,-1,0);
             if(!TryFreePosition(preferred,value,value,out var p))return;
+            CapEvidenceWorld.Instance?.Release(this,false);
+            InvestigatingEvidence.Value=-1;
+            if(value)CapEvidenceWorld.EnsureRound();
             movementResumeTime=Time.unscaledTime+CapLoadingScreen.MinimumVisibleSeconds+CapLoadingScreen.FadeSeconds;
             InTown.Value=value;InMeetingRoom.Value=value;ViewingMap.Value=false;TalkingToPolice.Value=false;
             ReadyToStart.Value=false;
@@ -90,6 +93,7 @@ namespace Cap.Multiplayer
 
         public override void OnNetworkDespawn()
         {
+            if(IsServer)CapEvidenceWorld.Instance?.Release(this,false);
             PlayerSlot.OnValueChanged-=OnSlotChanged;
             ColorIndex.OnValueChanged-=OnSlotChanged;
             // The seat becomes free because the server only counts spawned players.
@@ -231,13 +235,13 @@ namespace Cap.Multiplayer
                 if (!dialogueInput && Application.isFocused && k != null)
                 {
                     if(CapControls.Pressed(CapAction.Bicycle)) ToggleBicycle();
-                    if(CapControls.Pressed(CapAction.Interact) &&
+                    if(CapControls.Pressed(CapAction.Interact) && !TryInteractEvidence() &&
                         !(CapPoliceNpc.Instance!=null && CapPoliceNpc.Instance.TryInteract(this))) InteractDoor();
                     input=CapControls.Movement();
                 }
                 if (smokeMove) input = new Vector2(Mathf.Sin(Time.unscaledTime), Mathf.Cos(Time.unscaledTime));
                 if (TestInput.HasValue) input=TestInput.Value;
-                if(CapControls.Blocked || TalkingToPolice.Value || mapRequested || ViewingMap.Value || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))input=Vector2.zero;
+                if(CapControls.Blocked || InDialogue || mapRequested || ViewingMap.Value || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))input=Vector2.zero;
                 input=Vector2.ClampMagnitude(input,1);
                 if(input!=sentInput || Time.unscaledTime>=nextSend)
                 {
@@ -254,13 +258,13 @@ namespace Cap.Multiplayer
 
         // The owner requests map mode; the host enforces the movement lock.
         public void SetMapViewing(bool open) {
-            if(!IsSpawned || !IsOwner)return;
+            if(!IsSpawned || !IsOwner || (open && InDialogue))return;
             mapRequested=open && InTown.Value && !InMeetingRoom.Value;sentInput=Vector2.zero;nextSend=0;
             SetMapViewingRpc(mapRequested);
         }
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
         private void SetMapViewingRpc(bool open) {
-            ViewingMap.Value=open && InTown.Value && !InMeetingRoom.Value && !TalkingToPolice.Value;
+            ViewingMap.Value=open && InTown.Value && !InMeetingRoom.Value && !InDialogue;
             serverInput=Vector2.zero;Locomotion.Value=(byte)(Locomotion.Value&7);
             lastInputTime=Time.unscaledTime;
         }
@@ -273,7 +277,7 @@ namespace Cap.Multiplayer
         private void InteractDoorRpc()
         {
             var town=CapWarmTown.Instance;
-            if(Time.unscaledTime<movementResumeTime || !InTown.Value || ViewingMap.Value || TalkingToPolice.Value || town==null || Time.unscaledTime<nextDoorTime || !town.NearMeetingDoor(this))return;
+            if(Time.unscaledTime<movementResumeTime || !InTown.Value || ViewingMap.Value || InDialogue || town==null || Time.unscaledTime<nextDoorTime || !town.NearMeetingDoor(this))return;
             nextDoorTime=Time.unscaledTime+.6f;
             bool entering=!InMeetingRoom.Value;
             Vector3 preferred=entering ? CapWarmTown.MeetingSpawn : town.StudentDoor+Vector3.down*.6f;
@@ -293,7 +297,7 @@ namespace Cap.Multiplayer
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
         private void ToggleBicycleRpc()
         {
-            if(Time.unscaledTime<movementResumeTime || !InTown.Value || InMeetingRoom.Value || ViewingMap.Value || TalkingToPolice.Value || Time.unscaledTime<nextBikeToggle) return;
+            if(Time.unscaledTime<movementResumeTime || !InTown.Value || InMeetingRoom.Value || ViewingMap.Value || InDialogue || Time.unscaledTime<nextBikeToggle) return;
             nextBikeToggle=Time.unscaledTime+.3f;
             Riding.Value=!Riding.Value;
         }
@@ -302,7 +306,7 @@ namespace Cap.Multiplayer
         private void SubmitInputRpc(Vector2 input)
         {
             if (float.IsNaN(input.x) || float.IsNaN(input.y) || float.IsInfinity(input.x) || float.IsInfinity(input.y)) return;
-            serverInput = ViewingMap.Value || TalkingToPolice.Value || Time.unscaledTime<movementResumeTime ? Vector2.zero : Vector2.ClampMagnitude(input, 1);
+            serverInput = ViewingMap.Value || InDialogue || Time.unscaledTime<movementResumeTime ? Vector2.zero : Vector2.ClampMagnitude(input, 1);
             lastInputTime = Time.unscaledTime;
         }
 
@@ -312,7 +316,7 @@ namespace Cap.Multiplayer
             previousStep=currentStep;
             // NetworkTransform teleports (including development tools) must not interpolate across the map.
             if((transform.position-currentStep).sqrMagnitude>.01f) previousStep=transform.position;
-            if (ViewingMap.Value || TalkingToPolice.Value || Time.unscaledTime<movementResumeTime || Time.unscaledTime - lastInputTime > .25f) serverInput = Vector2.zero;
+            if (ViewingMap.Value || InDialogue || Time.unscaledTime<movementResumeTime || Time.unscaledTime - lastInputTime > .25f) serverInput = Vector2.zero;
             float movementSpeed=InTown.Value ? (Riding.Value?9:5) : speed;
             var p=MoveInEnvironment(transform.position,serverInput*movementSpeed*Time.fixedDeltaTime);
             UpdateLocomotion(p-transform.position);

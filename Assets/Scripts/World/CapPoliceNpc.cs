@@ -16,6 +16,8 @@ namespace Cap.Multiplayer
         private CapNetworkPlayer speaker;
         private bool pending,open,ownsDefinition;
         private uint requestId;
+        private int evidenceIndex=-1;
+        private CapEvidenceDefinition evidenceDefinition;
         private string notice;
         private string[] conversation;
         private int page;
@@ -82,7 +84,7 @@ namespace Cap.Multiplayer
         public bool TryInteract(CapNetworkPlayer player)
         {
             if(!IsNear(player) || player.ViewingMap.Value || CapControls.Blocked)return false;
-            speaker=player;pending=true;notice=null;
+            speaker=player;pending=true;notice=null;evidenceIndex=-1;evidenceDefinition=null;
             player.RequestPoliceDialogue(++requestId);
             return true;
         }
@@ -90,7 +92,7 @@ namespace Cap.Multiplayer
         public void ReceiveReply(CapNetworkPlayer player,uint replyId,PoliceDialogueResult result)
         {
             // Close already sends an ordered release RPC. Ignore old replies after cancel/retry.
-            if(replyId!=requestId || !pending || speaker!=player || !isActiveAndEnabled)return;
+            if(replyId!=requestId || !pending || speaker!=player || !isActiveAndEnabled || evidenceIndex>=0)return;
             pending=false;
             if(result!=PoliceDialogueResult.Granted)
             {
@@ -99,6 +101,29 @@ namespace Cap.Multiplayer
             }
             open=true;page=0;
             conversation=definition.lines!=null && definition.lines.Length>0 ? (string[])definition.lines.Clone() : new[]{"안녕하세요. 무엇을 도와드릴까요?"};
+            StartPage();
+        }
+
+        public bool TryInteractEvidence(CapNetworkPlayer player,int index)
+        {
+            var world=CapEvidenceWorld.Instance;
+            if(world==null || !world.CanReach(player,index) || player.ViewingMap.Value || CapControls.Blocked)return false;
+            speaker=player;pending=true;notice=null;evidenceIndex=index;evidenceDefinition=world.Definition;
+            player.RequestEvidenceDialogue(index,world.Round.Value,++requestId);
+            return true;
+        }
+
+        public void ReceiveEvidenceReply(CapNetworkPlayer player,uint replyId,PoliceDialogueResult result)
+        {
+            if(replyId!=requestId || !pending || speaker!=player || !isActiveAndEnabled || evidenceIndex<0)return;
+            pending=false;
+            if(result!=PoliceDialogueResult.Granted)
+            {
+                notice=result==PoliceDialogueResult.Busy?"지금 대화할 수 없습니다":"증거가 없거나 너무 멀리 있습니다.";
+                return;
+            }
+            open=true;page=0;
+            conversation=evidenceDefinition.lines!=null && evidenceDefinition.lines.Length>0 ? (string[])evidenceDefinition.lines.Clone() : new[]{"TEST1"};
             StartPage();
         }
 
@@ -127,17 +152,24 @@ namespace Cap.Multiplayer
             page++;StartPage();
         }
         private void Close()
+        {CloseDialogue(true);}
+        private void CloseDialogue(bool collect)
         {
-            if(speaker!=null && (pending || open || speaker.TalkingToPolice.Value))speaker.EndPoliceDialogue();
+            if(speaker!=null)
+            {
+                if(evidenceIndex>=0)speaker.EndEvidenceDialogue(requestId,collect && open);
+                else if(pending || open || speaker.TalkingToPolice.Value)speaker.EndPoliceDialogue();
+            }
             pending=false;open=false;notice=null;speaker=null;conversation=null;
+            evidenceIndex=-1;evidenceDefinition=null;
         }
 
         private void Update()
         {
             RefreshArt();
-            if(ModalOpen && (speaker==null || !speaker.IsSpawned || !speaker.InTown.Value || speaker.InMeetingRoom.Value))Close();
+            if(ModalOpen && (speaker==null || !speaker.IsSpawned || !speaker.InTown.Value || speaker.InMeetingRoom.Value))CloseDialogue(false);
         }
-        private void OnDisable(){Close();}
+        private void OnDisable(){CloseDialogue(false);}
         private void OnDestroy()
         {
             if(Instance==this)Instance=null;
@@ -199,10 +231,12 @@ namespace Cap.Multiplayer
                         Frame(bubble);GUI.Label(bubble,"•••",new GUIStyle(body){fontSize=18,alignment=TextAnchor.MiddleCenter});
                     }
                 }
-                if(IsNear(local))
+                bool nearEvidence=CapEvidenceWorld.Instance!=null && CapEvidenceWorld.Instance.FindNearby(local,out _);
+                if(nearEvidence || IsNear(local))
                 {
                     var box=new Rect(width/2-230,height-140,460,48);
-                    Frame(box);GUI.Label(Inset(box,10),$"[{CapControls.Label(CapAction.Interact)}] {definition.displayName}에게 말 걸기",new GUIStyle(body){fontSize=18,alignment=TextAnchor.MiddleCenter});
+                    string action=nearEvidence?"증거 조사":definition.displayName+"에게 말 걸기";
+                    Frame(box);GUI.Label(Inset(box,10),$"[{CapControls.Label(CapAction.Interact)}] {action}",new GUIStyle(body){fontSize=18,alignment=TextAnchor.MiddleCenter});
                 }
             }
             finally{GUI.matrix=matrix;GUI.color=color;GUI.depth=depth;}
@@ -214,7 +248,7 @@ namespace Cap.Multiplayer
             Frame(panel);
             var tab=new Rect(panel.x+14,panel.y-38,330,51);
             CutPanel(tab,Navy);CutPanel(Inset(tab,3),Paper);CutPanel(Inset(tab,6),Blue);
-            GUI.Label(new Rect(tab.x+22,tab.y+10,284,34),"●  "+definition.displayName,nameStyle);
+            GUI.Label(new Rect(tab.x+22,tab.y+10,284,34),"●  "+(evidenceIndex>=0?evidenceDefinition.displayName:definition.displayName),nameStyle);
             var area=new Rect(panel.x+36,panel.y+32,830,123);
             float textHeight=Mathf.Max(area.height,body.CalcHeight(new GUIContent(Line),area.width-22));
             scroll=GUI.BeginScrollView(area,scroll,new Rect(0,0,area.width-22,textHeight));
@@ -229,6 +263,17 @@ namespace Cap.Multiplayer
 
         private void DrawPortrait(Rect rect)
         {
+            if(evidenceIndex>=0)
+            {
+                if(evidenceDefinition.portrait!=null)GUI.DrawTexture(rect,evidenceDefinition.portrait,ScaleMode.ScaleToFit,true);
+                else
+                {
+                    var paper=new Rect(rect.center.x-45,rect.y+24,90,128);
+                    CutPanel(paper,Navy);CutPanel(Inset(paper,5),new Color(1,.85f,.32f));
+                    for(int i=0;i<4;i++)Fill(new Rect(paper.x+20,paper.y+28+i*21,50,5),Blue);
+                }
+                return;
+            }
             if(definition.portrait!=null)
             {
                 GUI.DrawTexture(rect,definition.portrait,ScaleMode.ScaleToFit,true);
@@ -245,7 +290,7 @@ namespace Cap.Multiplayer
         {
             Fill(new Rect(0,0,width,height),new Color(0,0,0,.25f));
             var panel=new Rect(width/2-310,height/2-95,620,190);Frame(panel);
-            GUI.Label(new Rect(panel.x+24,panel.y+33,572,48),pending?"대화를 요청하는 중…":notice,new GUIStyle(body){alignment=TextAnchor.MiddleCenter});
+            GUI.Label(new Rect(panel.x+24,panel.y+33,572,48),pending?(evidenceIndex>=0?"조사를 요청하는 중…":"대화를 요청하는 중…"):notice,new GUIStyle(body){alignment=TextAnchor.MiddleCenter});
             if(!pending)GUI.Label(new Rect(panel.x+24,panel.y+86,572,30),notice=="지금 대화할 수 없습니다"?"다른 플레이어가 대화 중입니다. 잠시 후 다시 시도해 주세요.":"E / Enter 또는 확인 버튼으로 닫을 수 있습니다.",new GUIStyle(hint){alignment=TextAnchor.MiddleCenter});
             if(GUI.Button(new Rect(panel.center.x-90,panel.yMax-52,180,32),pending?"취소 · Esc":"확인",button))Close();
         }

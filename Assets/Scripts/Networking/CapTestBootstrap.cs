@@ -11,7 +11,7 @@ namespace Cap.Multiplayer
         {
             var manager = NetworkManager.Singleton;
             // Profile/seat NetworkVariables require the same wire format on every player.
-            manager.NetworkConfig.ProtocolVersion = 7;
+            manager.NetworkConfig.ProtocolVersion = 8;
             manager.ConnectionApprovalCallback = (request, response) =>
             {
                 bool space = manager.ConnectedClientsIds.Count < 4;

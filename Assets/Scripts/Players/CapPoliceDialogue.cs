@@ -25,7 +25,7 @@ namespace Cap.Multiplayer
         internal PoliceDialogueResult TryBeginPoliceDialogue()
         {
             var npc=CapPoliceNpc.Instance;
-            if(!IsServer || !IsSpawned || !InTown.Value || InMeetingRoom.Value || ViewingMap.Value ||
+            if(!IsServer || !IsSpawned || !InTown.Value || InMeetingRoom.Value || ViewingMap.Value || InDialogue ||
                 Time.unscaledTime<movementResumeTime || npc==null || !npc.IsNear(this))
                 return PoliceDialogueResult.Unavailable;
             // RPCs execute sequentially on the server; claiming the flag is atomic here.

@@ -45,6 +45,9 @@ namespace Cap.Multiplayer
                 foreach(var player in FindObjectsByType<CapNetworkPlayer>(FindObjectsSortMode.None))
                     foreach(var sr in player.GetComponentsInChildren<SpriteRenderer>())
                         if(sr.enabled){hidden.Add(sr);sr.enabled=false;}
+                if(CapEvidenceWorld.Instance!=null)
+                    foreach(var sr in CapEvidenceWorld.Instance.GetComponentsInChildren<SpriteRenderer>())
+                        if(sr.enabled){hidden.Add(sr);sr.enabled=false;}
                 // Map labels must remain readable when the whole village is fitted on screen.
                 foreach(var text in root.GetComponentsInChildren<TextMesh>())
                 {labelScales.Add(text.transform,text.transform.localScale);text.transform.localScale*=2.2f;}
