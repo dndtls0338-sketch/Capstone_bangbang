@@ -62,6 +62,7 @@ namespace Cap.Multiplayer
                 GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-1280*scale)/2,(Screen.height-800*scale)/2),Quaternion.identity,Vector3.one*scale);
                 if(!open)
                 {
+                    if(CapPoliceNpc.ModalOpen)return;
                     if(CapRelaySession.Instance==null || !CapRelaySession.Instance.Connected)return;
                     Fill(new Rect(790,689,474,94),new Color(.04f,.07f,.11f,.95f));
                     var v=CapVoiceChat.Instance;
@@ -192,4 +193,3 @@ namespace Cap.Multiplayer
         private void OnDestroy(){if(Instance==this)Instance=null;if(font!=null)Destroy(font);}
     }
 }
-

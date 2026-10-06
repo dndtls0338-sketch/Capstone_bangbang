@@ -13,7 +13,7 @@ namespace Cap.Multiplayer
         public static readonly string[] Names = { "위로 이동", "아래로 이동", "왼쪽 이동", "오른쪽 이동", "지도 열기 / 닫기", "자전거 타기 / 내리기", "눌러서 말하기", "마이크 음소거", "문 열기 / 상호작용" };
         private static readonly Key[] keys = new Key[9];
         private static bool loaded;
-        public static bool Blocked => CapOptions.IsOpen || CapLobbyUI.ProfileEditing || CapLoadingScreen.Blocking;
+        public static bool Blocked => CapOptions.IsOpen || CapLobbyUI.ProfileEditing || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen;
         public static void Load()
         {
             if (loaded) return;

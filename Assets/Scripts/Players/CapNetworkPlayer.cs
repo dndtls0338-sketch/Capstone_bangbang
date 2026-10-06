@@ -46,7 +46,7 @@ namespace Cap.Multiplayer
             Vector3 preferred=value ? CapWarmTown.Spawn(PlayerSlot.Value) : new Vector3(-3+PlayerSlot.Value*2,-1,0);
             if(!TryFreePosition(preferred,value,false,out var p))return;
             movementResumeTime=Time.unscaledTime+CapLoadingScreen.MinimumVisibleSeconds+CapLoadingScreen.FadeSeconds;
-            InTown.Value=value;InMeetingRoom.Value=false;ViewingMap.Value=false;
+            InTown.Value=value;InMeetingRoom.Value=false;ViewingMap.Value=false;TalkingToPolice.Value=false;
             ReadyToStart.Value=false;StartAt.Value=-1;
             serverInput=Vector2.zero;Riding.Value=false;Locomotion.Value=6;
             GetComponent<Unity.Netcode.Components.NetworkTransform>().Teleport(p,transform.rotation,transform.localScale);
@@ -169,15 +169,17 @@ namespace Cap.Multiplayer
             {
                 Vector2 input = Vector2.zero;
                 var k = Keyboard.current;
-                if (Application.isFocused && k != null)
+                bool dialogueInput=CapPoliceNpc.Instance!=null && CapPoliceNpc.Instance.HandleInput(this);
+                if (!dialogueInput && Application.isFocused && k != null)
                 {
                     if(CapControls.Pressed(CapAction.Bicycle)) ToggleBicycle();
-                    if(CapControls.Pressed(CapAction.Interact)) InteractDoor();
+                    if(CapControls.Pressed(CapAction.Interact) &&
+                        !(CapPoliceNpc.Instance!=null && CapPoliceNpc.Instance.TryInteract(this))) InteractDoor();
                     input=CapControls.Movement();
                 }
                 if (smokeMove) input = new Vector2(Mathf.Sin(Time.unscaledTime), Mathf.Cos(Time.unscaledTime));
                 if (TestInput.HasValue) input=TestInput.Value;
-                if(CapControls.Blocked || mapRequested || ViewingMap.Value || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))input=Vector2.zero;
+                if(CapControls.Blocked || TalkingToPolice.Value || mapRequested || ViewingMap.Value || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))input=Vector2.zero;
                 input=Vector2.ClampMagnitude(input,1);
                 if(input!=sentInput || Time.unscaledTime>=nextSend)
                 {
@@ -200,7 +202,7 @@ namespace Cap.Multiplayer
         }
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
         private void SetMapViewingRpc(bool open) {
-            ViewingMap.Value=open && InTown.Value && !InMeetingRoom.Value;
+            ViewingMap.Value=open && InTown.Value && !InMeetingRoom.Value && !TalkingToPolice.Value;
             serverInput=Vector2.zero;Locomotion.Value=(byte)(Locomotion.Value&7);
             lastInputTime=Time.unscaledTime;
         }
@@ -213,7 +215,7 @@ namespace Cap.Multiplayer
         private void InteractDoorRpc()
         {
             var town=CapWarmTown.Instance;
-            if(Time.unscaledTime<movementResumeTime || !InTown.Value || ViewingMap.Value || town==null || Time.unscaledTime<nextDoorTime || !town.NearMeetingDoor(this))return;
+            if(Time.unscaledTime<movementResumeTime || !InTown.Value || ViewingMap.Value || TalkingToPolice.Value || town==null || Time.unscaledTime<nextDoorTime || !town.NearMeetingDoor(this))return;
             nextDoorTime=Time.unscaledTime+.6f;
             bool entering=!InMeetingRoom.Value;
             Vector3 preferred=entering ? CapWarmTown.MeetingSpawn : town.StudentDoor+Vector3.down*.6f;
@@ -233,7 +235,7 @@ namespace Cap.Multiplayer
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
         private void ToggleBicycleRpc()
         {
-            if(Time.unscaledTime<movementResumeTime || !InTown.Value || InMeetingRoom.Value || ViewingMap.Value || Time.unscaledTime<nextBikeToggle) return;
+            if(Time.unscaledTime<movementResumeTime || !InTown.Value || InMeetingRoom.Value || ViewingMap.Value || TalkingToPolice.Value || Time.unscaledTime<nextBikeToggle) return;
             nextBikeToggle=Time.unscaledTime+.3f;
             Riding.Value=!Riding.Value;
         }
@@ -242,7 +244,7 @@ namespace Cap.Multiplayer
         private void SubmitInputRpc(Vector2 input)
         {
             if (float.IsNaN(input.x) || float.IsNaN(input.y) || float.IsInfinity(input.x) || float.IsInfinity(input.y)) return;
-            serverInput = ViewingMap.Value || Time.unscaledTime<movementResumeTime ? Vector2.zero : Vector2.ClampMagnitude(input, 1);
+            serverInput = ViewingMap.Value || TalkingToPolice.Value || Time.unscaledTime<movementResumeTime ? Vector2.zero : Vector2.ClampMagnitude(input, 1);
             lastInputTime = Time.unscaledTime;
         }
 
@@ -252,7 +254,7 @@ namespace Cap.Multiplayer
             previousStep=currentStep;
             // NetworkTransform teleports (including development tools) must not interpolate across the map.
             if((transform.position-currentStep).sqrMagnitude>.01f) previousStep=transform.position;
-            if (ViewingMap.Value || Time.unscaledTime<movementResumeTime || Time.unscaledTime - lastInputTime > .25f) serverInput = Vector2.zero;
+            if (ViewingMap.Value || TalkingToPolice.Value || Time.unscaledTime<movementResumeTime || Time.unscaledTime - lastInputTime > .25f) serverInput = Vector2.zero;
             float movementSpeed=InTown.Value ? (Riding.Value?9:5) : speed;
             var p=MoveWithPlayers(transform.position,serverInput*movementSpeed*Time.fixedDeltaTime);
             UpdateLocomotion(p-transform.position);

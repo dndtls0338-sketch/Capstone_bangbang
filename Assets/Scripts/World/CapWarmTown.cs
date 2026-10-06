@@ -68,7 +68,7 @@ namespace Cap.Multiplayer
             bool desired=player != null && player.IsSpawned && player.InTown.Value;
             if(desired != InTown)
             {
-                InTown=desired; root.SetActive(desired); Overview=false;
+                InTown=desired; root.SetActive(desired); Overview=false;ResetMinimap();
                 foreach(var ui in lobbyUIs) if(ui!=null) ui.enabled=!desired;
                 foreach(var go in lobbyObjects) if(go != null) go.SetActive(!desired);
                 if(view != null) { view.rect=new Rect(0,0,1,1); view.transform.position=desired ? Spawn(player.PlayerSlot.Value)+new Vector3(0,2,-10):lobbyCamera; view.orthographicSize=desired?cameraZoom:lobbyZoom; }
@@ -95,8 +95,22 @@ namespace Cap.Multiplayer
             view.rect=new Rect(0,0,1,1);
             view.orthographicSize=ReferenceCameraHalfHeight;
             var player=obj.GetComponent<CapNetworkPlayer>();
-            view.transform.position=player.VisualCenter+new Vector3(0,0,-10);
-
+            var cameraPosition=player.VisualCenter+new Vector3(0,0,-10);
+            if(!player.InMeetingRoom.Value)
+            {
+                // Keep the entire viewport inside the town, including after a window resize.
+                float aspect=Mathf.Max(view.aspect,.0001f);
+                float halfHeight=Mathf.Min(ReferenceCameraHalfHeight,Bounds.height/2,Bounds.width/(2*aspect));
+                float halfWidth=halfHeight*aspect;
+                view.orthographicSize=halfHeight;
+                float travelX=Mathf.Max(0,Bounds.width/2-halfWidth);
+                float travelY=Mathf.Max(0,Bounds.height/2-halfHeight);
+                float centerX=OffsetX+Bounds.center.x;
+                cameraPosition.x=Mathf.Clamp(cameraPosition.x,centerX-travelX,centerX+travelX);
+                cameraPosition.y=Mathf.Clamp(cameraPosition.y,Bounds.center.y-travelY,Bounds.center.y+travelY);
+            }
+            view.transform.position=cameraPosition;
+            UpdateMinimap(player);
         }
 
         private SpriteRenderer Make(string name)
@@ -132,7 +146,7 @@ namespace Cap.Multiplayer
             float s=Mathf.Clamp(Screen.width/1400f,.6f,1.4f); var old=GUI.matrix; GUI.matrix=Matrix4x4.Scale(Vector3.one*s);
             GUI.Box(new Rect(16,16,440,64),GUIContent.none);
             GUI.Label(new Rect(30,22,420,28),(IsMeetingRoom ? "학생회관 / 탐정 동아리 회의실" : "대학생 탐정단 / 도형 테스트 마을"),label);
-            GUI.Label(new Rect(30,49,420,28),$"{CapControls.Label(CapAction.Up)}/{CapControls.Label(CapAction.Left)}/{CapControls.Label(CapAction.Down)}/{CapControls.Label(CapAction.Right)} 이동 · {CapControls.Label(CapAction.Interact)} 문 열기"+(IsMeetingRoom?"":$" · {CapControls.Label(CapAction.Map)} 지도"),new GUIStyle(label){fontSize=14});
+            GUI.Label(new Rect(30,49,420,28),$"{CapControls.Label(CapAction.Up)}/{CapControls.Label(CapAction.Left)}/{CapControls.Label(CapAction.Down)}/{CapControls.Label(CapAction.Right)} 이동 · {CapControls.Label(CapAction.Interact)} 대화 / 문"+(IsMeetingRoom?"":$" · {CapControls.Label(CapAction.Map)} 지도"),new GUIStyle(label){fontSize=14});
             var local=NetworkManager.Singleton.LocalClient?.PlayerObject;
             if(local!=null)
             {
@@ -141,8 +155,8 @@ namespace Cap.Multiplayer
             }
             if(local!=null && local.GetComponent<CapNetworkPlayer>().Riding.Value)
                 GUI.Label(new Rect(30,82,350,28),$"자전거 주행 중 · 속도 ×1.8 · {CapControls.Label(CapAction.Bicycle)} 내리기",label);
-            if(NetworkManager.Singleton.IsHost && GUI.Button(new Rect(Screen.width/s-160,20,140,36),"대기실로 돌아가기")) StartForAll(false);
             GUI.matrix=old;
+            DrawMinimap();
             DrawMeetingDoorHint();
         }
 
@@ -156,8 +170,8 @@ namespace Cap.Multiplayer
             if(font!=null) Destroy(font);
             if(mapImage!=null) Destroy(mapImage);
             if(mapDot!=null) Destroy(mapDot);
+            if(minimapImage!=null) Destroy(minimapImage);
             if(blockoutFont!=null) Destroy(blockoutFont);
         }
     }
 }
-

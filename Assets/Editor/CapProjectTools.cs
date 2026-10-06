@@ -12,6 +12,13 @@ namespace Cap.Editor
     {
         private const string ScenePath = "Assets/Scenes/CapRelayTest.unity";
 
+        [MenuItem("CAP/경찰서 NPC 설정")]
+        public static void SelectPoliceNpc()
+        {
+            Selection.activeObject=AssetDatabase.LoadAssetAtPath<Cap.Multiplayer.CapPoliceNpcDefinition>("Assets/Resources/Dialogue/PoliceNpc.asset");
+            EditorGUIUtility.PingObject(Selection.activeObject);
+        }
+
         [MenuItem("CAP/게임 씬 열기")]
         public static void Open()
         {
