@@ -43,11 +43,11 @@ namespace Cap.Multiplayer
         public void SetTown(bool value)
         {
             if (!IsServer || !IsSpawned || PlayerSlot.Value<0) return;
-            Vector3 preferred=value ? CapWarmTown.Spawn(PlayerSlot.Value) : new Vector3(-3+PlayerSlot.Value*2,-1,0);
-            if(!TryFreePosition(preferred,value,false,out var p))return;
+            Vector3 preferred=value ? CapWarmTown.MeetingCenter+new Vector3(-3+PlayerSlot.Value*2,-4,0) : new Vector3(-3+PlayerSlot.Value*2,-1,0);
+            if(!TryFreePosition(preferred,value,value,out var p))return;
             movementResumeTime=Time.unscaledTime+CapLoadingScreen.MinimumVisibleSeconds+CapLoadingScreen.FadeSeconds;
-            InTown.Value=value;InMeetingRoom.Value=false;ViewingMap.Value=false;TalkingToPolice.Value=false;
-            ReadyToStart.Value=false;StartAt.Value=-1;
+            InTown.Value=value;InMeetingRoom.Value=value;ViewingMap.Value=false;TalkingToPolice.Value=false;
+            ReadyToStart.Value=false;
             serverInput=Vector2.zero;Riding.Value=false;Locomotion.Value=6;
             GetComponent<Unity.Netcode.Components.NetworkTransform>().Teleport(p,transform.rotation,transform.localScale);
             previousStep=currentStep=p;
@@ -80,9 +80,6 @@ namespace Cap.Multiplayer
             previousStep=currentStep=transform.position;
             if(IsOwner && !CapPlayerProfile.Verification && (CapPlayerProfile.SavedName.Length>0 || CapPlayerProfile.SavedColor>=0))
                 RequestProfileRpc(new FixedString64Bytes(CapPlayerProfile.SavedName),CapPlayerProfile.SavedColor,true);
-            if (IsServer)
-                foreach (var other in FindObjectsByType<CapNetworkPlayer>(FindObjectsSortMode.None))
-                    if (other != this && other.IsSpawned && other.InTown.Value) { SetTown(true); break; }
             Debug.Log($"[CAP] Player spawned owner={OwnerClientId} slot={PlayerSlot.Value} local={IsOwner} server={IsServer}");
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             var args = System.Environment.GetCommandLineArgs();
@@ -97,6 +94,7 @@ namespace Cap.Multiplayer
             ColorIndex.OnValueChanged-=OnSlotChanged;
             // The seat becomes free because the server only counts spawned players.
             if(visual!=null){Destroy(visual.gameObject);visual=null;}
+            if(nameFont!=null)Destroy(nameFont);nameFont=null;nameStyle=null;
             base.OnNetworkDespawn();
         }
         private void OnSlotChanged(int previous,int current){ApplySlotVisual();}
@@ -160,10 +158,70 @@ namespace Cap.Multiplayer
             else CapPlayerProfile.Status="다른 플레이어가 선택한 색상입니다. 다른 색상을 골라 주세요.";
         }
 
+        private float nextChatTime;
+        public void SendChat(string text)
+        {
+            if(IsOwner && IsSpawned)
+            {
+                string clean=CapChat.CleanMessage(text);
+                if(clean.Length>0)SendChatRpc(new FixedString512Bytes(clean));
+            }
+        }
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
+        private void SendChatRpc(FixedString512Bytes text)
+        {
+            if(Time.unscaledTime<nextChatTime)return;
+            string clean=CapChat.CleanMessage(text.ToString());
+            if(clean.Length==0)return;
+            nextChatTime=Time.unscaledTime+.45f;
+            // Sender identity comes from server state, never from client-provided display text.
+            ReceiveChatRpc(new FixedString128Bytes(PlayerLabel),new FixedString512Bytes(clean));
+        }
+        [Rpc(SendTo.ClientsAndHost, InvokePermission = RpcInvokePermission.Server)]
+        private void ReceiveChatRpc(FixedString128Bytes sender,FixedString512Bytes text)
+        {
+            CapChat.Instance?.Receive(sender.ToString(),text.ToString());
+        }
+
+        private Font nameFont;
+        private GUIStyle nameStyle;
+        private void OnGUI()
+        {
+            if(!IsSpawned || !IsOwner || CapOptions.IsOpen || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))return;
+            var camera=Camera.main;if(camera==null)return;
+            if(nameStyle==null)
+            {
+                nameFont=Font.CreateDynamicFontFromOSFont(new[]{"Malgun Gothic","Arial"},18);
+                nameStyle=new GUIStyle(GUI.skin.label){font=nameFont,alignment=TextAnchor.MiddleCenter,fontStyle=FontStyle.Bold,richText=false,normal={textColor=Color.white}};
+            }
+            var matrix=GUI.matrix;var color=GUI.color;int depth=GUI.depth;
+            try
+            {
+                GUI.matrix=Matrix4x4.identity;GUI.color=Color.white;GUI.depth=100;
+                float scale=Mathf.Min(Screen.width/1280f,Screen.height/800f);nameStyle.fontSize=Mathf.Max(10,Mathf.RoundToInt(17*scale));
+                var players=FindObjectsByType<CapNetworkPlayer>(FindObjectsSortMode.None);
+                foreach(var player in players)if(player!=this)DrawName(player,camera,scale);
+                DrawName(this,camera,scale); // Own nameplate also stays on top when stacked.
+            }
+            finally{GUI.matrix=matrix;GUI.color=color;GUI.depth=depth;}
+        }
+        private void DrawName(CapNetworkPlayer player,Camera camera,float scale)
+        {
+            if(!player.IsSpawned || player.NetworkManager!=NetworkManager || !SameSpace(player))return;
+            var renderer=player.visual!=null?player.visual:player.GetComponent<SpriteRenderer>();
+            if(renderer==null || !renderer.enabled)return;
+            var anchor=camera.WorldToScreenPoint(new Vector3(renderer.bounds.center.x,renderer.bounds.max.y,renderer.bounds.center.z));
+            if(anchor.z<=0 || anchor.x<0 || anchor.x>Screen.width || anchor.y<0 || anchor.y>Screen.height)return;
+            string name=player.PlayerLabel+(player==this?" · 나":"");
+            float width=nameStyle.CalcSize(new GUIContent(name)).x+16*scale;
+            var area=new Rect(anchor.x-width/2,Screen.height-anchor.y-30*scale,width,25*scale);
+            GUI.color=new Color(.03f,.06f,.1f,.85f);GUI.DrawTexture(area,Texture2D.whiteTexture);GUI.color=Color.white;
+            GUI.Label(area,name,nameStyle);
+        }
+
         private void Update()
         {
             if (!IsSpawned) return;
-            TickLobbyReady();
             if(!InTown.Value)mapRequested=false;
             if (IsOwner)
             {
@@ -256,7 +314,7 @@ namespace Cap.Multiplayer
             if((transform.position-currentStep).sqrMagnitude>.01f) previousStep=transform.position;
             if (ViewingMap.Value || TalkingToPolice.Value || Time.unscaledTime<movementResumeTime || Time.unscaledTime - lastInputTime > .25f) serverInput = Vector2.zero;
             float movementSpeed=InTown.Value ? (Riding.Value?9:5) : speed;
-            var p=MoveWithPlayers(transform.position,serverInput*movementSpeed*Time.fixedDeltaTime);
+            var p=MoveInEnvironment(transform.position,serverInput*movementSpeed*Time.fixedDeltaTime);
             UpdateLocomotion(p-transform.position);
             transform.position = p;
             currentStep=p;
@@ -280,7 +338,8 @@ namespace Cap.Multiplayer
             }
             var local=NetworkManager.LocalClient?.PlayerObject?.GetComponent<CapNetworkPlayer>();
             sr.enabled=local!=null && SameSpace(local);
-            sr.sortingOrder = InTown.Value ? CapWarmTown.Depth(RenderPosition.y) : 10;
+            // Local rendering only: your own avatar appears above teammates.
+            sr.sortingOrder = IsOwner ? 10000 : InTown.Value ? CapWarmTown.Depth(RenderPosition.y) : 10;
         }
     }
 }

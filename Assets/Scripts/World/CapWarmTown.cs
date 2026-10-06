@@ -81,7 +81,7 @@ namespace Cap.Multiplayer
             var keyboard=Keyboard.current;
             if(Application.isFocused && keyboard!=null && !CapControls.Blocked) {
                 if(CapControls.Pressed(CapAction.Map))SetMapOpen(!Overview);
-                else if(Overview && keyboard.escapeKey.wasPressedThisFrame)SetMapOpen(false);
+                else if(Overview && keyboard.escapeKey.wasPressedThisFrame && !CapControls.EscapeConsumed){CapControls.ConsumeEscape();SetMapOpen(false);}
             }
             // Fixed reference framing; scroll wheel cannot silently change asset scale.
         }

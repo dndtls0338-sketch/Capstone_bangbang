@@ -108,7 +108,7 @@ namespace Cap.Multiplayer
             if(!ModalOpen || player!=speaker)return false;
             var keyboard=Keyboard.current;
             if(!Application.isFocused || keyboard==null || CapOptions.IsOpen || CapLoadingScreen.Blocking)return true;
-            if(keyboard.escapeKey.wasPressedThisFrame){Close();return true;}
+            if(keyboard.escapeKey.wasPressedThisFrame && !CapControls.EscapeConsumed){CapControls.ConsumeEscape();Close();return true;}
             if(keyboard[CapControls.Get(CapAction.Interact)].wasPressedThisFrame || keyboard.enterKey.wasPressedThisFrame)
             {
                 if(notice!=null)Close();

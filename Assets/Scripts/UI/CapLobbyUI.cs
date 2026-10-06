@@ -47,11 +47,11 @@ namespace Cap.Multiplayer
             if(profileOpen)
             {
                 if(!connection.Connected || CapOptions.IsOpen || (CapWarmTown.Instance!=null && CapWarmTown.Instance.InTown))CloseProfileEditor();
-                else if(Application.isFocused && keyboard!=null && keyboard.escapeKey.wasPressedThisFrame)CloseProfileEditor();
+                else if(Application.isFocused && keyboard!=null && keyboard.escapeKey.wasPressedThisFrame && !CapControls.EscapeConsumed)CloseProfileEditor();
                 return;
             }
             if(CapOptions.IsOpen || !Application.isFocused || keyboard==null || connection.Busy || connection.Connected)return;
-            if(keyboard.escapeKey.wasPressedThisFrame && page!=Page.Home)BackToHome();
+            if(keyboard.escapeKey.wasPressedThisFrame && !CapControls.EscapeConsumed && page!=Page.Home)BackToHome();
             else if(page==Page.Join && (keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame))JoinFromMenu(code);
         }
 
@@ -71,7 +71,7 @@ namespace Cap.Multiplayer
             Fill(new Rect(552,241,4,431),Accent);
             GUI.Label(new Rect(580,259,610,45),"내 플레이어 변경",heading);
             profileName=GUI.TextField(new Rect(580,321,628,48),profileName,12,new GUIStyle(field){fontSize=24,padding=new RectOffset(12,12,6,6)});
-            GUI.Label(new Rect(582,378,625,30),"이름 최대 12자 · 비워두면 P번호로 표시",muted);
+            GUI.Label(new Rect(582,378,625,30),"이름 최대 12자",muted);
             for(int i=0;i<CapPlayerProfile.Colors.Length;i++)
             {
                 var rect=new Rect(580+(i%4)*159,423+(i/4)*52,149,42);
@@ -252,22 +252,16 @@ namespace Cap.Multiplayer
                 else GUI.Label(new Rect(116,y+4,350,32),"참가 대기 중",muted);
             }
             var mine=System.Array.Find(players,p=>p.IsSpawned&&p.IsOwner);
-            var leader=CapNetworkPlayer.LobbyHost;
-            if(leader!=null && leader.StartAt.Value>=0)
-            {
-                int seconds=Mathf.Max(1,Mathf.CeilToInt((float)(leader.StartAt.Value-NetworkManager.Singleton.ServerTime.Time)));
-                GUI.Label(new Rect(72,526,418,26),$"전원 준비 완료 · {seconds}초 후 시작",small);
-            }
             GUI.enabled=!connection.Busy&&mine!=null&&!profileOpen&&!CapLoadingScreen.Blocking;
             if(GUI.Button(new Rect(70,553,host?202:420,58),mine!=null&&mine.ReadyToStart.Value?"준비 취소":"준비 완료",primary))mine.SetReady(!mine.ReadyToStart.Value);
             if(host)
             {
                 GUI.enabled=GUI.enabled && mine!=null && mine.CanStartFromLobby;
-                if(GUI.Button(new Rect(288,553,202,58),leader!=null&&leader.StartAt.Value>=0?"시작 대기":"게임 시작",primary))mine.StartReadyCountdown();
+                if(GUI.Button(new Rect(288,553,202,58),"게임 시작",primary))mine.StartReadyGame();
             }
             GUI.enabled=!connection.Busy;
             if(GUI.Button(new Rect(70,627,420,48),"방 나가기",button))connection.LeaveRoom();
-            GUI.Label(new Rect(72,697,418,30),"전원 준비 후 방장이 시작하면 3초 뒤 이동합니다.",small);
+            GUI.Label(new Rect(72,697,418,30),"전원 준비 후 방장이 시작하면 회의실로 이동합니다.",small);
             if(profileOpen)DrawProfileEditor();
         }
         private void OnDisable(){CloseProfileEditor();}

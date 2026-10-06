@@ -13,7 +13,7 @@ namespace Cap.Multiplayer
     public sealed class CapVoiceChat : MonoBehaviour
     {
         public static CapVoiceChat Instance { get; private set; }
-        public string Status { get; private set; } = "인터넷 방에 입장하면 음성이 연결됩니다.";
+        public string Status { get; private set; } = "";
         public bool Ready { get; private set; }
         public bool VoiceEnabled { get; private set; }
         public bool PushToTalk { get; private set; }
@@ -184,7 +184,7 @@ namespace Cap.Multiplayer
                 if(initialized && Service.IsLoggedIn)
                 {Silence();await Service.LeaveAllChannelsAsync();await Service.LogoutAsync();}
                 joined="";recovering=false;levels.Clear();applied.Clear();muteGates.Clear();ResetDeviceCommands();
-                if(disposed || desired.Length==0 || Desired!=desired){Status="인터넷 방에 입장하면 음성이 연결됩니다.";return;}
+                if(disposed || desired.Length==0 || Desired!=desired){Status="";return;}
                 Status="음성 서버 연결 중…";
                 await EnsureDevicesAsync();
                 SetDeviceMute(true,true);SetDeviceMute(false,true);

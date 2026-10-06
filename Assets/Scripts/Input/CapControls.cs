@@ -13,7 +13,10 @@ namespace Cap.Multiplayer
         public static readonly string[] Names = { "위로 이동", "아래로 이동", "왼쪽 이동", "오른쪽 이동", "지도 열기 / 닫기", "자전거 타기 / 내리기", "눌러서 말하기", "마이크 음소거", "문 열기 / 상호작용" };
         private static readonly Key[] keys = new Key[9];
         private static bool loaded;
-        public static bool Blocked => CapOptions.IsOpen || CapLobbyUI.ProfileEditing || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen;
+        private static int escapeFrame=-1;
+        public static bool EscapeConsumed => escapeFrame==Time.frameCount;
+        public static void ConsumeEscape(){escapeFrame=Time.frameCount;}
+        public static bool Blocked => CapChat.InputBlocked || CapOptions.IsOpen || CapLobbyUI.ProfileEditing || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen;
         public static void Load()
         {
             if (loaded) return;
@@ -32,11 +35,11 @@ namespace Cap.Multiplayer
         public static string Label(CapAction action) => Get(action).ToString();
         public static bool Held(CapAction action) => !Blocked && Keyboard.current!=null && Keyboard.current[Get(action)].isPressed;
         public static bool Pressed(CapAction action) => !Blocked && Keyboard.current!=null && Keyboard.current[Get(action)].wasPressedThisFrame;
-        public static bool Allowed(Key key) => Enum.IsDefined(typeof(Key),key) && key!=Key.None && key!=Key.Escape && key!=Key.F10 && key!=Key.LeftWindows && key!=Key.RightWindows && key!=Key.LeftAlt && key!=Key.RightAlt && key!=Key.PrintScreen;
+        public static bool Allowed(Key key) => Enum.IsDefined(typeof(Key),key) && key!=Key.None && key!=Key.Escape && key!=Key.Enter && key!=Key.NumpadEnter && key!=Key.LeftWindows && key!=Key.RightWindows && key!=Key.LeftAlt && key!=Key.RightAlt && key!=Key.PrintScreen;
         public static bool Bind(CapAction action,Key key,out string message)
         {
             Load();
-            if(!Allowed(key)){message="이 키는 사용할 수 없습니다. Esc는 취소, F10은 옵션입니다.";return false;}
+            if(!Allowed(key)){message="이 키는 사용할 수 없습니다. Esc는 옵션 / 취소, Enter는 채팅입니다.";return false;}
             int other=Array.IndexOf(keys,key);
             if(other>=0 && other!=(int)action){message=Names[other]+"에 사용 중인 키입니다.";return false;}
             keys[(int)action]=key;Save();message="변경되었습니다.";return true;

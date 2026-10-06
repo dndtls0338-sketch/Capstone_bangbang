@@ -87,9 +87,10 @@ namespace Cap.Multiplayer
 
         private async Task RecoverAsync(Exception error)
         {
-            Debug.LogWarning("[CAP] Connection failed: " + error.Message);
+            Debug.LogWarning("[CAP] Connection failed: " + error);
+            string reason=NetworkManager.Singleton!=null ? NetworkManager.Singleton.DisconnectReason : "";
             await CleanupAsync();
-            Status = "연결 실패: " + error.Message;
+            Status = "연결 실패: " + (string.IsNullOrWhiteSpace(reason) ? error.Message : reason);
         }
 
         private async Task CleanupAsync()
@@ -131,7 +132,7 @@ namespace Cap.Multiplayer
             try
             {
                 await CleanupAsync();
-                Status = "방장 또는 네트워크 연결이 종료되었습니다. 다시 방을 만들거나 참가하세요.";
+                Status = "";
             }
             finally { Busy = false; }
         }

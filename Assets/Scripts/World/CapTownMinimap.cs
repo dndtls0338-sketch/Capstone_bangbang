@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Cap.Multiplayer
@@ -7,21 +6,7 @@ namespace Cap.Multiplayer
     {
         private const int MinimapResolution=224;
         private const float MinimapRadius=18;
-        private const float TrailSeconds=12;
         private const float MinimapRefreshSeconds=.075f;
-        private struct TrailPoint
-        {
-            public Vector2 position;
-            public float time;
-            public TrailPoint(Vector2 p,float t){position=p;time=t;}
-        }
-        private sealed class MinimapTrail
-        {
-            public readonly List<TrailPoint> points=new List<TrailPoint>();
-        }
-        private readonly Dictionary<ulong,MinimapTrail> minimapTrails=new Dictionary<ulong,MinimapTrail>();
-        private readonly HashSet<ulong> minimapVisiblePlayers=new HashSet<ulong>();
-        private readonly List<ulong> minimapRemovedPlayers=new List<ulong>();
         private Texture2D minimapImage;
         private Color32[] minimapPixels,mapPhotoPixels;
         private float nextMinimapRefresh;
@@ -31,7 +16,7 @@ namespace Cap.Multiplayer
 
         private void ResetMinimap()
         {
-            minimapTrails.Clear();nextMinimapRefresh=0;
+            nextMinimapRefresh=0;
         }
 
         // The background photograph is captured once. Only a small circular texture is
@@ -53,24 +38,6 @@ namespace Cap.Multiplayer
                 minimapPixels=new Color32[MinimapResolution*MinimapResolution];
             }
             var players=FindObjectsByType<CapNetworkPlayer>(FindObjectsSortMode.None);
-            minimapVisiblePlayers.Clear();
-            foreach(var player in players)
-            {
-                if(!player.IsSpawned || !local.SameSpace(player) || player.NetworkManager!=local.NetworkManager)continue;
-                ulong id=player.NetworkObjectId;minimapVisiblePlayers.Add(id);
-                if(!minimapTrails.TryGetValue(id,out var trail))minimapTrails.Add(id,trail=new MinimapTrail());
-                var points=trail.points;Vector2 position=player.RenderPosition;
-                // Teleports and scene transitions must not draw a line across the map.
-                if(points.Count>0 && Vector2.Distance(points[points.Count-1].position,position)>4)points.Clear();
-                while(points.Count>0 && points[0].time<now-TrailSeconds)points.RemoveAt(0);
-                if(points.Count==0 || (now-points[points.Count-1].time>=.15f && (points[points.Count-1].position-position).sqrMagnitude>.01f))
-                    points.Add(new TrailPoint(position,now));
-                if(points.Count>96)points.RemoveAt(0);
-            }
-            minimapRemovedPlayers.Clear();
-            foreach(var pair in minimapTrails)if(!minimapVisiblePlayers.Contains(pair.Key))minimapRemovedPlayers.Add(pair.Key);
-            foreach(ulong id in minimapRemovedPlayers)minimapTrails.Remove(id);
-
             Vector2 center=local.RenderPosition;
             float worldRadius=room?12:MinimapRadius;
             for(int y=0;y<MinimapResolution;y++)for(int x=0;x<MinimapResolution;x++)
@@ -86,21 +53,8 @@ namespace Cap.Multiplayer
                 color.a=(byte)(color.a*Mathf.Clamp01(MinimapResolution/2f-distance));
                 minimapPixels[y*MinimapResolution+x]=color;
             }
-            foreach(var player in players)
-            {
-                if(!player.IsSpawned || !local.SameSpace(player) || !minimapVisiblePlayers.Contains(player.NetworkObjectId))continue;
-                var points=minimapTrails[player.NetworkObjectId].points;
-                Color tint=PlayerColor(player.ColorIndex.Value);
-                for(int i=1;i<points.Count;i++)
-                {
-                    float alpha=Mathf.Lerp(.08f,.72f,Mathf.Clamp01(1-(now-points[i].time)/TrailSeconds));
-                    var a=MinimapPoint(points[i-1].position,center,worldRadius);
-                    var b=MinimapPoint(points[i].position,center,worldRadius);
-                    DrawMinimapLine(a,b,tint,alpha);
-                }
-            }
             // Draw the local marker last, with a white outline and a facing indicator.
-            foreach(var player in players)if(player.IsSpawned && player!=local && local.SameSpace(player) && minimapVisiblePlayers.Contains(player.NetworkObjectId))
+            foreach(var player in players)if(player.IsSpawned && player!=local && local.SameSpace(player) && player.NetworkManager==local.NetworkManager)
                 DrawMinimapMarker(player,center,worldRadius,false);
             DrawMinimapMarker(local,center,worldRadius,true);
             minimapImage.SetPixels32(minimapPixels);minimapImage.Apply(false);
@@ -175,7 +129,7 @@ namespace Cap.Multiplayer
                 var caption=new GUIStyle(compass){fontSize=Mathf.RoundToInt(13*scale),fontStyle=FontStyle.Normal};
                 var textArea=new Rect(area.x,area.yMax+5*scale,size,24*scale);
                 GUI.color=new Color(.04f,.09f,.15f,.9f);GUI.DrawTexture(textArea,Texture2D.whiteTexture);GUI.color=Color.white;
-                GUI.Label(textArea,minimapRoom?"회의실 · 최근 이동 경로":"마을 · 최근 이동 경로",caption);
+                GUI.Label(textArea,minimapRoom?"회의실":"마을",caption);
                 if(Unity.Netcode.NetworkManager.Singleton.IsHost)
                 {
                     var button=new GUIStyle(GUI.skin.button){font=font,fontSize=Mathf.RoundToInt(14*scale)};

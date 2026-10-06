@@ -33,13 +33,17 @@ namespace Cap.Multiplayer
             var keyboard=Keyboard.current;if(!Application.isFocused || keyboard==null)return;
             if(capture>=0)
             {
-                if(keyboard.escapeKey.wasPressedThisFrame){capture=-1;message="키 변경을 취소했습니다.";return;}
+                if(keyboard.escapeKey.wasPressedThisFrame){CapControls.ConsumeEscape();capture=-1;message="키 변경을 취소했습니다.";return;}
                 foreach(var key in keyboard.allKeys)
                     if(key.wasPressedThisFrame){if(CapControls.Bind((CapAction)capture,key.keyCode,out message))capture=-1;break;}
                 return;
             }
-            if(keyboard.f10Key.wasPressedThisFrame){if(open)Close();else Open();return;}
-            if(open && keyboard.escapeKey.wasPressedThisFrame){if(deviceDropdown>=0)deviceDropdown=-1;else Close();}
+            if(!keyboard.escapeKey.wasPressedThisFrame)return;
+            if(CapChat.IsTyping){CapChat.Instance.CancelInput();CapControls.ConsumeEscape();return;}
+            if(open){CapControls.ConsumeEscape();if(deviceDropdown>=0)deviceDropdown=-1;else Close();return;}
+            // Dismiss an active dialog or map first; the next Esc opens settings.
+            if(CapPoliceNpc.ModalOpen || CapLobbyUI.ProfileEditing || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))return;
+            CapControls.ConsumeEscape();Open();
         }
         private void Styles()
         {
@@ -62,30 +66,58 @@ namespace Cap.Multiplayer
                 GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-1280*scale)/2,(Screen.height-800*scale)/2),Quaternion.identity,Vector3.one*scale);
                 if(!open)
                 {
-                    if(CapPoliceNpc.ModalOpen)return;
+
                     if(CapRelaySession.Instance==null || !CapRelaySession.Instance.Connected)return;
-                    Fill(new Rect(790,689,474,94),new Color(.04f,.07f,.11f,.95f));
-                    var v=CapVoiceChat.Instance;
-                    string state=v==null?"음성 준비 중":!v.VoiceEnabled?"음성 꺼짐":!v.Ready?v.Status:v.Muted?"마이크 음소거":v.Transmitting?(v.PushToTalk?"눌러서 말하기 · 송출 중":"항상 켜짐 · 송출 중"):v.PushToTalk?$"눌러서 말하기 · {CapControls.Label(CapAction.PushToTalk)} 누르기":"항상 켜짐 · 게임 창을 선택하세요";
-                    GUI.Label(new Rect(805,698,440,44),state,small);
-                    if(GUI.Button(new Rect(805,744,215,30),"F10 · 옵션 / 조작키",button))Open();
-                    if(v!=null && GUI.Button(new Rect(1030,744,220,30),v.Muted?"마이크 켜기":"마이크 끄기",button))v.SetMuted(!v.Muted);
+                    DrawMicrophoneIcon(scale);
                     return;
                 }
                 Fill(new Rect(-2000,-2000,6000,6000),new Color(.025f,.04f,.065f,.98f));
                 Fill(new Rect(190,45,900,710),new Color(.08f,.115f,.16f));
                 GUI.Label(new Rect(225,70,800,55),"옵션",heading);
-                GUI.Label(new Rect(227,128,800,35),"설정은 자동 저장됩니다. 게임 중에도 F10으로 열 수 있습니다.",small);
+                GUI.Label(new Rect(227,128,800,35),"설정은 자동 저장됩니다. 게임 중에도 Esc로 열 수 있습니다.",small);
                 // A dropdown owns the pointer until it closes; clicks cannot pass through it.
                 GUI.enabled=deviceDropdown<0;
                 for(int i=0;i<4;i++)if(GUI.Button(new Rect(225+i*210,174,200,45),(tab==i?"● ":"")+new[]{"화면 / 소리","조작키 변경","음성 채팅","장치 테스트"}[i],button))SelectTab(i);
                 if(tab==0)DrawGeneral();else if(tab==1)DrawControls();else if(tab==2)DrawVoice();else DrawAudioTest();
                 GUI.Label(new Rect(225,633,820,43),message,small);
-                if(GUI.Button(new Rect(225,690,830,42),capture>=0?"키 선택 취소":"저장하고 닫기 · Esc",button)){if(capture>=0)capture=-1;else Close();}
+                bool connected=CapRelaySession.Instance!=null && CapRelaySession.Instance.Connected;
+                if(GUI.Button(new Rect(225,690,connected?540:830,42),capture>=0?"키 선택 취소":"저장하고 닫기 · Esc",button)){if(capture>=0)capture=-1;else Close();}
+                if(connected)
+                {
+                    GUI.enabled=GUI.enabled && !CapRelaySession.Instance.Busy;
+                    if(GUI.Button(new Rect(780,690,275,42),"방 나가기",button))LeaveCurrentRoom();
+                    if(Unity.Netcode.NetworkManager.Singleton.IsHost)
+                        GUI.Label(new Rect(225,669,825,22),"방장이 나가면 방이 종료됩니다.",new GUIStyle(small){fontSize=14});
+                }
                 GUI.enabled=true;
                 if(deviceDropdown>=0)DrawDeviceDropdown();
             }
             finally{GUI.matrix=old;GUI.depth=depth;GUI.color=color;GUI.enabled=enabled;}
+        }
+        public void LeaveCurrentRoom()
+        {
+            if(CapRelaySession.Instance==null || CapRelaySession.Instance.Busy)return;
+            CapChat.Instance?.CancelInput();Close();CapRelaySession.Instance.LeaveRoom();
+        }
+        private void DrawMicrophoneIcon(float scale)
+        {
+            GUI.matrix=Matrix4x4.identity;
+            var area=new Rect(Screen.width-76*scale,Screen.height-76*scale,56*scale,56*scale);
+            var voice=CapVoiceChat.Instance;
+            bool muted=voice==null || !voice.VoiceEnabled || voice.Muted;
+            Color tint=muted?new Color(1,.38f,.38f):voice.Transmitting?new Color(.35f,.95f,.6f):new Color(.7f,.76f,.83f);
+            string status=muted?"마이크 음소거":!voice.Ready?"음성 연결 대기":voice.Transmitting?"마이크 송출 중":voice.PushToTalk?"눌러서 말하기 · "+CapControls.Label(CapAction.PushToTalk):"마이크 송출 대기";
+            Fill(area,new Color(.04f,.07f,.11f,.95f));
+            if(voice!=null && GUI.Button(area,new GUIContent("",status+" · 클릭: 음소거 전환"),GUIStyle.none))voice.SetMuted(!voice.Muted);
+            GUI.matrix=Matrix4x4.TRS(new Vector3(area.x,area.y),Quaternion.identity,Vector3.one*scale);
+            Fill(new Rect(23,10,10,22),tint);Fill(new Rect(21,12,14,18),tint);
+            Fill(new Rect(17,24,3,10),tint);Fill(new Rect(36,24,3,10),tint);
+            Fill(new Rect(20,34,16,3),tint);Fill(new Rect(27,37,3,7),tint);Fill(new Rect(21,44,15,3),tint);
+            if(muted)
+            {
+                var matrix=GUI.matrix;GUIUtility.RotateAroundPivot(-45,new Vector2(28,28));
+                Fill(new Rect(4,26,48,4),tint);GUI.matrix=matrix;
+            }
         }
         private void DrawGeneral()
         {
@@ -97,7 +129,7 @@ namespace Cap.Multiplayer
             if(GUI.Button(new Rect(570,381,485,48),Screen.fullScreen?"전체 화면":"창 모드",button))
             {bool full=!Screen.fullScreen;Screen.fullScreenMode=full?FullScreenMode.FullScreenWindow:FullScreenMode.Windowed;PlayerPrefs.SetInt("Cap.Fullscreen",full?1:0);}
             GUI.enabled=true;
-            GUI.Label(new Rect(225,467,825,100),"전체 음량은 게임 소리와 음성에 모두 적용됩니다.\n화면 모드는 빌드한 게임에서 변경할 수 있습니다.\nEsc: 지도 / 설정 닫기 · F10: 옵션 (고정 키)",small);
+            GUI.Label(new Rect(225,467,825,100),"전체 음량은 게임 소리와 음성에 모두 적용됩니다.\n화면 모드는 빌드한 게임에서 변경할 수 있습니다.\nEsc: 옵션 / 열린 창 닫기 · Enter: 일반 채팅 (고정 키)",small);
         }
         private void DrawControls()
         {
