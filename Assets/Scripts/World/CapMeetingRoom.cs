@@ -46,7 +46,11 @@ namespace Cap.Multiplayer
             for(int i=0;i<4;i++)RoomRect("Seat "+i,new Vector2(i%2==0?-2.4f:2.4f,i<2?2.3f:-2.3f),new Vector2(1,1),new Color(.37f,.46f,.65f),-2100);
             RoomRect("Notice board",new Vector2(0,9),new Vector2(9,.7f),new Color(.25f,.40f,.36f),-2000);
             RoomLabel("탐정 동아리 회의실",new Vector2(0,7.7f));
-            RoomLabel("회의 테이블",Vector2.zero);
+            RoomLabel("회의 테이블",new Vector2(0,.75f));
+            var newspaper=new GameObject("Case newspaper on starting desk");
+            newspaper.transform.SetParent(meetingRoot.transform,false);
+            newspaper.transform.position=MeetingCenter+new Vector3(0,-.8f,0);
+            newspaper.AddComponent<CapCaseNewspaper>().Initialize(white,ArtMaterial);
             RoomLabel("출구",new Vector2(0,-9.6f));
             meetingRoot.SetActive(false);
         }

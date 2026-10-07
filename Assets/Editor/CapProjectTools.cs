@@ -12,6 +12,13 @@ namespace Cap.Editor
     {
         private const string ScenePath = "Assets/Scenes/CapRelayTest.unity";
 
+        [MenuItem("CAP/사건 뉴스 설정")]
+        public static void SelectCaseNews()
+        {
+            Selection.activeObject=AssetDatabase.LoadAssetAtPath<Cap.Multiplayer.CapCaseNewsDefinition>("Assets/Resources/News/CaseNews.asset");
+            EditorGUIUtility.PingObject(Selection.activeObject);
+        }
+
         [MenuItem("CAP/랜덤 증거 설정")]
         public static void SelectEvidence()
         {

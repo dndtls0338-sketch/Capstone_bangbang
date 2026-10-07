@@ -54,6 +54,8 @@ namespace Cap.Multiplayer
             serverInput=Vector2.zero;Riding.Value=false;Locomotion.Value=6;
             GetComponent<Unity.Netcode.Components.NetworkTransform>().Teleport(p,transform.rotation,transform.localScale);
             previousStep=currentStep=p;
+            ReadingCaseNews.Value=false;
+            if(value)ShowCaseNewsForRound(1);
         }
         public override void OnNetworkSpawn()
         {
@@ -191,7 +193,7 @@ namespace Cap.Multiplayer
         private GUIStyle nameStyle;
         private void OnGUI()
         {
-            if(!IsSpawned || !IsOwner || CapOptions.IsOpen || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))return;
+            if(!IsSpawned || !IsOwner || CapOptions.IsOpen || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen || CapCaseNews.ModalOpen || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))return;
             var camera=Camera.main;if(camera==null)return;
             if(nameStyle==null)
             {
@@ -231,11 +233,12 @@ namespace Cap.Multiplayer
             {
                 Vector2 input = Vector2.zero;
                 var k = Keyboard.current;
-                bool dialogueInput=CapPoliceNpc.Instance!=null && CapPoliceNpc.Instance.HandleInput(this);
+                bool dialogueInput=(CapCaseNews.Instance!=null && CapCaseNews.Instance.HandleInput(this)) ||
+                    (CapPoliceNpc.Instance!=null && CapPoliceNpc.Instance.HandleInput(this));
                 if (!dialogueInput && Application.isFocused && k != null)
                 {
                     if(CapControls.Pressed(CapAction.Bicycle)) ToggleBicycle();
-                    if(CapControls.Pressed(CapAction.Interact) && !TryInteractEvidence() &&
+                    if(CapControls.Pressed(CapAction.Interact) && !TryReadNewspaper() && !TryInteractEvidence() &&
                         !(CapPoliceNpc.Instance!=null && CapPoliceNpc.Instance.TryInteract(this))) InteractDoor();
                     input=CapControls.Movement();
                 }

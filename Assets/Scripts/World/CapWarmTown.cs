@@ -60,6 +60,15 @@ namespace Cap.Multiplayer
                 if(player.IsSpawned) player.SetTown(town);
         }
 
+        // Future round progression can call this once on the host to brief every player.
+        public static void ShowCaseNewsForRound(int round)
+        {
+            var manager=NetworkManager.Singleton;
+            if(manager==null || !manager.IsServer)return;
+            foreach(var player in FindObjectsByType<CapNetworkPlayer>(FindObjectsSortMode.None))
+                if(player.IsSpawned && player.NetworkManager==manager && player.InTown.Value)player.ShowCaseNewsForRound(round);
+        }
+
         private void Update()
         {
             var nm=NetworkManager.Singleton;
@@ -139,7 +148,7 @@ namespace Cap.Multiplayer
 
         private void OnGUI()
         {
-            if(!InTown || CapOptions.IsOpen || CapLoadingScreen.Blocking) return;
+            if(!InTown || CapOptions.IsOpen || CapLoadingScreen.Blocking || CapCaseNews.ModalOpen) return;
 
             if(label==null) { font=Font.CreateDynamicFontFromOSFont(new[]{"Malgun Gothic","Arial"},18); label=new GUIStyle(GUI.skin.label){font=font,fontSize=18}; }
             if(Overview){DrawMapOverlay();return;}

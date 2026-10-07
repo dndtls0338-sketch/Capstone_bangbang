@@ -17,7 +17,7 @@ namespace Cap.Multiplayer
 
         public void SetMapOpen(bool open)
         {
-            if(open && (CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen))return;
+            if(open && (CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen || CapCaseNews.ModalOpen))return;
             var obj=NetworkManager.Singleton?.LocalClient?.PlayerObject;
             var player=obj!=null?obj.GetComponent<CapNetworkPlayer>():null;
             open=open && InTown && player!=null && player.IsSpawned && !player.InMeetingRoom.Value;

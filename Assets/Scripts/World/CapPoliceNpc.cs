@@ -153,6 +153,7 @@ namespace Cap.Multiplayer
         }
         private void Close()
         {CloseDialogue(true);}
+        public void CancelForCaseNews(){CloseDialogue(false);}
         private void CloseDialogue(bool collect)
         {
             if(speaker!=null)
@@ -203,7 +204,7 @@ namespace Cap.Multiplayer
 
         private void OnGUI()
         {
-            if(CapOptions.IsOpen || CapLoadingScreen.Blocking || definition==null)return;
+            if(CapOptions.IsOpen || CapLoadingScreen.Blocking || CapCaseNews.ModalOpen || definition==null)return;
             var local=Unity.Netcode.NetworkManager.Singleton?.LocalClient?.PlayerObject?.GetComponent<CapNetworkPlayer>();
             if(local==null || !local.IsSpawned || !local.InTown.Value || local.InMeetingRoom.Value)return;
             if(CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview)return;

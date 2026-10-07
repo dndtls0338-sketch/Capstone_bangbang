@@ -82,7 +82,7 @@ namespace Cap.Multiplayer
                 wasConnected=false;return;
             }
             wasConnected=true;
-            if(typing && (!Application.isFocused || CapOptions.IsOpen || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen || CapLobbyUI.ProfileEditing || Keyboard.current!=imeKeyboard)){CancelInput();return;}
+            if(typing && (!Application.isFocused || CapOptions.IsOpen || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen || CapCaseNews.ModalOpen || CapLobbyUI.ProfileEditing || Keyboard.current!=imeKeyboard)){CancelInput();return;}
             var k=Keyboard.current;
             if(!typing && Application.isFocused && k!=null && (k.enterKey.wasPressedThisFrame || k.numpadEnterKey.wasPressedThisFrame) && !CapControls.Blocked)BeginInput();
         }
@@ -96,7 +96,7 @@ namespace Cap.Multiplayer
         }
         private void OnGUI()
         {
-            if(Local==null || !Local.IsSpawned || CapOptions.IsOpen || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen || CapLobbyUI.ProfileEditing)return;
+            if(Local==null || !Local.IsSpawned || CapOptions.IsOpen || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen || CapCaseNews.ModalOpen || CapLobbyUI.ProfileEditing)return;
             Styles();var matrix=GUI.matrix;var tint=GUI.color;int depth=GUI.depth;
             try
             {

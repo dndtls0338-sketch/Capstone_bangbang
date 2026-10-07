@@ -42,7 +42,7 @@ namespace Cap.Multiplayer
             if(CapChat.IsTyping){CapChat.Instance.CancelInput();CapControls.ConsumeEscape();return;}
             if(open){CapControls.ConsumeEscape();if(deviceDropdown>=0)deviceDropdown=-1;else Close();return;}
             // Dismiss an active dialog or map first; the next Esc opens settings.
-            if(CapPoliceNpc.ModalOpen || CapLobbyUI.ProfileEditing || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))return;
+            if(CapPoliceNpc.ModalOpen || CapCaseNews.ModalOpen || CapLobbyUI.ProfileEditing || (CapWarmTown.Instance!=null && CapWarmTown.Instance.Overview))return;
             CapControls.ConsumeEscape();Open();
         }
         private void Styles()

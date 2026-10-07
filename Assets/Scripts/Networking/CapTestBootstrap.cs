@@ -6,12 +6,12 @@ namespace Cap.Multiplayer
 {
     public sealed class CapTestBootstrap : MonoBehaviour
     {
-        private void Awake() { if(CapLoadingScreen.Instance==null)gameObject.AddComponent<CapLoadingScreen>(); if (CapWarmTown.Instance == null) gameObject.AddComponent<CapWarmTown>(); if(CapOptions.Instance==null)gameObject.AddComponent<CapOptions>(); if(CapChat.Instance==null)gameObject.AddComponent<CapChat>(); if(CapVoiceChat.Instance==null)gameObject.AddComponent<CapVoiceChat>(); }
+        private void Awake() { if(CapLoadingScreen.Instance==null)gameObject.AddComponent<CapLoadingScreen>(); if(CapCaseNews.Instance==null)gameObject.AddComponent<CapCaseNews>(); if (CapWarmTown.Instance == null) gameObject.AddComponent<CapWarmTown>(); if(CapOptions.Instance==null)gameObject.AddComponent<CapOptions>(); if(CapChat.Instance==null)gameObject.AddComponent<CapChat>(); if(CapVoiceChat.Instance==null)gameObject.AddComponent<CapVoiceChat>(); }
         private IEnumerator Start()
         {
             var manager = NetworkManager.Singleton;
             // Profile/seat NetworkVariables require the same wire format on every player.
-            manager.NetworkConfig.ProtocolVersion = 8;
+            manager.NetworkConfig.ProtocolVersion = 9;
             manager.ConnectionApprovalCallback = (request, response) =>
             {
                 bool space = manager.ConnectedClientsIds.Count < 4;

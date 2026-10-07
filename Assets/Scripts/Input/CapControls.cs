@@ -16,7 +16,7 @@ namespace Cap.Multiplayer
         private static int escapeFrame=-1;
         public static bool EscapeConsumed => escapeFrame==Time.frameCount;
         public static void ConsumeEscape(){escapeFrame=Time.frameCount;}
-        public static bool Blocked => CapChat.InputBlocked || CapOptions.IsOpen || CapLobbyUI.ProfileEditing || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen;
+        public static bool Blocked => CapChat.InputBlocked || CapOptions.IsOpen || CapLobbyUI.ProfileEditing || CapLoadingScreen.Blocking || CapPoliceNpc.ModalOpen || CapCaseNews.ModalOpen;
         public static void Load()
         {
             if (loaded) return;

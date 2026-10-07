@@ -6,7 +6,7 @@ namespace Cap.Multiplayer
     public sealed partial class CapNetworkPlayer
     {
         public readonly NetworkVariable<int> InvestigatingEvidence=new NetworkVariable<int>(-1);
-        public bool InDialogue=>TalkingToPolice.Value || InvestigatingEvidence.Value>=0;
+        public bool InDialogue=>TalkingToPolice.Value || InvestigatingEvidence.Value>=0 || ReadingCaseNews.Value;
         private uint evidenceRequestId;
 
         public bool TryInteractEvidence()
